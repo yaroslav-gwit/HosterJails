@@ -6,7 +6,7 @@ else
         printf "You are not root!!! Log in as root, please.\n" && exit
 fi
 
-if [[ $SHELL = $(which bash) ]] then
+if [[ $SHELL = $(which bash) ]]; then
         printf "bash is a sane choice of shell, proceeding with the install.\n"
 else
         printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n" && \
