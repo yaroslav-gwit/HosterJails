@@ -47,7 +47,7 @@ pkg install -y nano htop bmon iftop makepasswd sudo figlet &> /dev/null
 printf "."
 
 ## Set the correct banner ##
-figlet GATEWAY - IT HOSTING > /etc/motd &> /dev/null
+figlet GATEWAY - IT HOSTING > /etc/motd
 service motd restart &> /dev/null
 
 ## Up to 12 Oct 2020 the newest version of working MariaDB of FreeBSD was 10.3, that's why it is used here. ##
