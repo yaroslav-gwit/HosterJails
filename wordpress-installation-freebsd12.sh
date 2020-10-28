@@ -487,3 +487,5 @@ printf "Your new site username: "
 printf "${CYAN}$WP_CLI_USERNAME${NC} "
 printf "and password: "
 printf "${CYAN}$WP_CLI_USER_PASSWORD${NC}\n"
+
+printf "\n"
