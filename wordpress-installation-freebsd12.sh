@@ -2,8 +2,22 @@
 
 ## Set the colors ##
 NC='\033[0m'
+BLACK='\033[0;30m'
+RED='\033[0;31m'
 GREEN='\033[0;32m'
+BROWN_ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
+LIGHTGRAY='\033[0;37m'
+DARKGRAY='\033[1;30m'
+LIGHTRED='\033[1;31m'
+LIGHTGREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+LIGHTBLUE='\033[1;34m'
+LIGHTPURPLE='\033[1;35m'
+LIGHTCYAN='\033[1;36m'
+WHITE='\033[1;37m'
 
 if [[ $USER = root ]]; then
         printf "You ${GREEN}passed the root user check${NC}, all good.\n"
@@ -437,19 +451,19 @@ sudo -u www wp --path='/usr/local/www/apache24/data/' theme delete twentysevente
 printf "${GREEN}Done${NC}\n"
 
 ## Note with all credentials for later use ##
-printf "Writing down all passwords to ${GREEN}creds.txt${NC}: "
+printf "Writing down all passwords to ${GREEN}wordpress-creds.txt${NC}: "
 
-echo "## Wordpress Web GUI username and password ##" >> /root/creds.txt
-echo "WP_GUI_USERNAME" - $WP_CLI_USERNAME >> /root/creds.txt
-echo "WP_GUI_USER_PASSWORD" - $WP_CLI_USER_PASSWORD >> /root/creds.txt
-echo   >> /root/creds.txt
-echo "## Mysql/MariaDB root password ##" >> /root/creds.txt
-echo "DB_ROOT_PASSWORD" - $DB_ROOT_PASSWORD >> /root/creds.txt
-echo   >> /root/creds.txt
-echo "## Wordpress DB name, DB user, DB user's password ##" >> /root/creds.txt
-echo "DB_WPDB_NAME" - $DB_WPDB_NAME >> /root/creds.txt
-echo "DB_WPDB_USER" - $DB_WPDB_USER >> /root/creds.txt
-echo "DB_WPDB_USER_PASSWORD" - $DB_WPDB_USER_PASSWORD >> /root/creds.txt
+echo "## Wordpress Web GUI username and password ##" >> /root/wordpress-creds.txt
+echo "WP_GUI_USERNAME" - $WP_CLI_USERNAME >> /root/wordpress-creds.txt
+echo "WP_GUI_USER_PASSWORD" - $WP_CLI_USER_PASSWORD >> /root/wordpress-creds.txt
+echo   >> /root/wordpress-creds.txt
+echo "## Mysql/MariaDB root password ##" >> /root/wordpress-creds.txt
+echo "DB_ROOT_PASSWORD" - $DB_ROOT_PASSWORD >> /root/wordpress-creds.txt
+echo   >> /root/wordpress-creds.txt
+echo "## Wordpress DB name, DB user, DB user's password ##" >> /root/wordpress-creds.txt
+echo "DB_WPDB_NAME" - $DB_WPDB_NAME >> /root/wordpress-creds.txt
+echo "DB_WPDB_USER" - $DB_WPDB_USER >> /root/wordpress-creds.txt
+echo "DB_WPDB_USER_PASSWORD" - $DB_WPDB_USER_PASSWORD >> /root/wordpress-creds.txt
 
 printf "${GREEN}Done${NC} \n"
 
