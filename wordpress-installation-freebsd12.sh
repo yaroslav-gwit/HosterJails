@@ -463,7 +463,7 @@ IPADDR=$(ifconfig | grep "192\|10\|172" | awk '{print $2}' | awk '/^192|^10|^172
 #### IN THE FUTURE I WILL ADD A FLAG TO CHOOSE THIS BEFORE INSTALL ####
 #printf "The installation is now finished. Go to ${CYAN}https://${IPADDR}${NC} or ${CYAN}https://$(hostname)${NC} or ${CYAN}https://$(curl -s ifconfig.me)${NC} to configure your new site. \n"
 
-printf "The installation is now finished. In case you forgot, this Jail IP is: ${CYAN}${IPADDR}${NC} or ${CYAN}https://${IPADDR}${NC} \n Go and add your new install to the Reverse Proxy. \n"
+printf "The installation is now finished. In case you forgot, this Jail IP is: ${CYAN}${IPADDR}${NC} or ${CYAN}https://${IPADDR}${NC} \nGo and add your new install to the Reverse Proxy. \n"
 
 ## Printout username and password: ##
 printf "Your new site username: "
