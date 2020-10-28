@@ -432,7 +432,7 @@ sed -i '' "/'DB_USER'/s/username_here/$DB_WPDB_USER/" /usr/local/www/apache24/da
 sed -i '' "/'DB_PASSWORD'/s/password_here/$DB_WPDB_USER_PASSWORD/" /usr/local/www/apache24/data/wp-config.php
 sed -i '' "/$table_prefix =/s/'wp_'/'${WP_DB_PREFIX}_'/" /usr/local/www/apache24/data/wp-config.php
 
-printf "."
+printf ". "
 
 printf "${GREEN}Done${NC}\n"
 printf "Initializing the WordPress installation and removing the default trash: "
