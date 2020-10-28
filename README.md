@@ -22,7 +22,9 @@ curl -s https://raw.githubusercontent.com/yaroslav-gwit/freebsd-wordpress-autoin
 > There is also <code>/usr/local/etc/apache24/httpd.conf.BACKUP</code>, in case you'd like to check the defaults, add more modules, etc.
 - To apply any PHP.INI settings, edit <code>/usr/local/www/apache24/data/.htaccess</code> and follow the example there.
 - The installation includes WP-CLI. To run a command with WP-CLI, it must start this way:<br>
-<code>sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE</code>
+```
+sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE
+```
 - The installation is ready to be placed behind a reverse web proxy, like NGINX or HAProxy. REMOTE IP Apache module is installed and configured. WP-CONFIG.PHP is also slightly altered to play nicely with HTTPS reverse proxy.
 - Only HTTPS(443) port is active, to encrypt traffic between the proxy and backend.
 - All the default WordPress resoruces are removed upon login. You'll get a cleanest WordPress installation you can think of.
