@@ -34,7 +34,6 @@ else
         && exit
 fi
 
-printf "${GREEN}Starting the installation${NC}\n"
 printf "Installing and configuring software: "
 
 ## Install the software required for basic jail stuff ##
