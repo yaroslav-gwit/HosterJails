@@ -17,8 +17,22 @@ fi
 
 ## Set the colors ##
 NC='\033[0m'
+BLACK='\033[0;30m'
+RED='\033[0;31m'
 GREEN='\033[0;32m'
+BROWN_ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
+LIGHTGRAY='\033[0;37m'
+DARKGRAY='\033[1;30m'
+LIGHTRED='\033[1;31m'
+LIGHTGREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+LIGHTBLUE='\033[1;34m'
+LIGHTPURPLE='\033[1;35m'
+LIGHTCYAN='\033[1;36m'
+WHITE='\033[1;37m'
 
 printf "${GREEN}Starting the installation${NC}\n"
 printf "Installing and configuring software: "
@@ -120,6 +134,8 @@ cd /root/
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &> /dev/null
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
+
+printf "."
 
 ## Make Apache conf file sensible and ready for use with WordPress
 cp /usr/local/etc/apache24/httpd.conf /usr/local/etc/apache24/httpd.conf.BACKUP
@@ -257,10 +273,14 @@ EOF_APACHECONFIG
 #### CODE TO DO A HEALTH CHECK IS NOT YET PRESENT ####
 service apache24 restart &> /dev/null
 
+printf "."
+
 ## Download the latest version of WordPress, move it into the correct folder and assign right permissions ##
 cd /tmp
 fetch http://wordpress.org/latest.tar.gz &> /dev/null
 tar xf /tmp/latest.tar.gz
+
+printf "."
 
 rm /usr/local/www/apache24/data/index.html
 
@@ -277,6 +297,8 @@ echo "php_value post_max_size 500M" >> /usr/local/www/apache24/data/.htaccess
 echo "php_value memory_limit 256M" >> /usr/local/www/apache24/data/.htaccess
 echo "php_value max_execution_time 300" >> /usr/local/www/apache24/data/.htaccess
 echo "php_value max_input_time 300" >> /usr/local/www/apache24/data/.htaccess
+
+printf "."
 
 ## Create a proper WP_CONFIG.PHP, populate it with required DB info and randomize the required values ##
 WP_DB_PREFIX=$(makepasswd --chars 3 --string=qwertyuiopasdfghjklzxcvbnm)
@@ -410,6 +432,8 @@ sed -i '' "/'DB_USER'/s/username_here/$DB_WPDB_USER/" /usr/local/www/apache24/da
 sed -i '' "/'DB_PASSWORD'/s/password_here/$DB_WPDB_USER_PASSWORD/" /usr/local/www/apache24/data/wp-config.php
 sed -i '' "/$table_prefix =/s/'wp_'/'${WP_DB_PREFIX}_'/" /usr/local/www/apache24/data/wp-config.php
 
+printf "."
+
 printf "${GREEN}Done${NC}\n"
 printf "Initializing the WordPress installation and removing the default trash: "
 
@@ -455,7 +479,7 @@ IPADDR=$(ifconfig | grep "192\|10\|172" | awk '{print $2}' | awk '/^192|^10|^172
 
 printf "The installation is now finished. In case you forgot, this Jail IP is: ${CYAN}${IPADDR}${NC} or ${CYAN}https://${IPADDR}${NC} \n Go and add your new install to the Reverse Proxy. \n"
 
-## Print out username and password: ##
+## Printout username and password: ##
 printf "Your new site username: "
 printf "${CYAN}$WP_CLI_USERNAME${NC} "
 printf "and password: "
