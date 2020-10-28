@@ -1,5 +1,7 @@
 #!/usr/local/bin/bash
 
+printf "\n"
+
 ## Set the colors ##
 NC='\033[0m'
 BLACK='\033[0;30m'
@@ -34,6 +36,7 @@ else
         && exit
 fi
 
+printf "\n"
 printf "Installing and configuring software: "
 
 ## Install the software required for basic jail stuff ##
@@ -465,6 +468,7 @@ echo "DB_WPDB_USER" - $DB_WPDB_USER >> /root/wordpress-creds.txt
 echo "DB_WPDB_USER_PASSWORD" - $DB_WPDB_USER_PASSWORD >> /root/wordpress-creds.txt
 
 printf "${GREEN}Done${NC} \n"
+printf "\n"
 
 ## Restart apache and make sure that it's running ##
 #### CODE TO DO A HEALTH CHECK IS NOT YET PRESENT ####
