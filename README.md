@@ -11,3 +11,9 @@ Currently supported releases of FreeBSD are: 12.1, 12.2.
 #### Then logout for the changes to apply, log back in and run this oneliner. Run the script as root, *sudo* is not supported at the moment.
 For FreeBSD 12:<br>
 <code>curl -s https://raw.githubusercontent.com/yaroslav-gwit/freebsd-wordpress-autoinstaller/main/wordpress-installation-freebsd12.sh | bash - </code>
+
+#### Couple of notes:
+- All WordPress files are here: <code>/usr/local/www/apache24/data/</code>
+- Apache2 config file is here: <code>/usr/local/etc/apache24/httpd.conf</code>
+> There is <code>also /usr/local/etc/apache24/httpd.conf.BACKUP</code>, in case you'd like to check the defaults, add more modules, etc.
+- To apply any PHP.INI settings, edit <code>/usr/local/www/apache24/data/.htaccess</code> and follow the example there.
