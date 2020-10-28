@@ -1,4 +1,11 @@
 #!/usr/local/bin/bash
+
+if [[ $USER = root ]]; then
+        printf "You are root!\n"
+else
+        printf "You are not root!!! Log in as root, please.\n" && exit
+fi
+
 if [[ $SHELL = $(which bash) ]] then
         printf "bash is a sane choice of shell, proceeding with the install.\n"
 else
