@@ -19,4 +19,4 @@ For FreeBSD 12:<br>
 - To apply any PHP.INI settings, edit <code>/usr/local/www/apache24/data/.htaccess</code> and follow the example there.
 - The installation includes WP-CLI. To run a command with WP-CLI, it must start this way:<br>
 <code>sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE</code>
-- The installation is ready to be placed behind a reverse web proxy, like NGINX or HAProxy. REMOTE IP Apache module is installed and configured. WP-CONFIG.PHP is also slightly altered to play nicely with a proxy.
+- The installation is ready to be placed behind a reverse web proxy, like NGINX or HAProxy. REMOTE IP Apache module is installed and configured. WP-CONFIG.PHP is also slightly altered to play nicely with HTTPS reverse proxy.
