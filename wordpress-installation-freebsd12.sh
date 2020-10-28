@@ -99,10 +99,7 @@ EOF_WPDATABASE
 printf "."
 
 ## Install all of the required PHP stuff ##
-pkg install -y mod_php74 php74-mysqli php74-tokenizer php74-zlib php74-zip php74 rsync php74-gd curl php74-curl php74-xml php74-bcmath \
-php74-json php74-mbstring php74-pecl-imagick php74-pecl-imagick-im7 php74-iconv php74-filter php74-pecl-json_post php74-pecl-jsond \
-php74-pear-Services_JSON php74-exif php74-fileinfo php74-openssl php74-dom php74-session php74-ctype php74-simplexml \
-php74-phar php74-gmp &> /dev/null
+pkg install -y mod_php74 php74-mysqli php74-tokenizer php74-zlib php74-zip php74 rsync php74-gd curl php74-curl php74-xml php74-bcmath php74-json php74-mbstring php74-pecl-imagick php74-pecl-imagick-im7 php74-iconv php74-filter php74-pecl-json_post php74-pecl-jsond php74-pear-Services_JSON php74-exif php74-fileinfo php74-openssl php74-dom php74-session php74-ctype php74-simplexml php74-phar php74-gmp &> /dev/null
 
 printf "."
 
@@ -125,8 +122,7 @@ printf "."
 ## Make a selfsigned SSL cert
 mkdir /ssl
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /ssl/self.key -out /ssl/self.crt -subj \
-"/C=GB/ST=London/L=London/O=Global Security/OU=Gateway-IT Department/CN=gateway-it.intranet" &> /dev/null
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /ssl/self.key -out /ssl/self.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=Gateway-IT Department/CN=gateway-it.intranet" &> /dev/null
 
 chown -R www:www /ssl
 
@@ -448,8 +444,7 @@ WP_CLI_USERNAME=defadm_$(makepasswd --chars 7 --string=qwertyuiopasdfghjklzxcvbn
 WP_CLI_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
 WP_CLI_USER_EMAIL=$(makepasswd --minchars 3 --maxchars 7 --string=qwertyuiopasdfghjklzxcvbnm)@nonexistentdomain.net
 
-sudo -u www wp core install --url=127.0.0.1 --path='/usr/local/www/apache24/data/' --title="GWIT Hosted Wordpress Site" \
---admin_user=$WP_CLI_USERNAME --admin_password=$WP_CLI_USER_PASSWORD --admin_email=${WP_CLI_USER_EMAIL} &> /dev/null
+sudo -u www wp core install --url=127.0.0.1 --path='/usr/local/www/apache24/data/' --title="GWIT Hosted Wordpress Site" --admin_user=$WP_CLI_USERNAME --admin_password=$WP_CLI_USER_PASSWORD --admin_email=${WP_CLI_USER_EMAIL} &> /dev/null
 sudo -u www wp --path='/usr/local/www/apache24/data/' rewrite structure '/%postname%/' &> /dev/null
 sudo -u www wp --path='/usr/local/www/apache24/data/' plugin delete akismet hello &> /dev/null
 sudo -u www wp --path='/usr/local/www/apache24/data/' site empty --yes &> /dev/null
