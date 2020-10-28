@@ -426,7 +426,7 @@ printf "Initializing the WordPress installation and removing the default trash: 
 ## Initialize new WordPress website with WP-CLI, nuke default stuff ##
 WP_CLI_USERNAME=defadm_$(makepasswd --chars 7 --string=qwertyuiopasdfghjklzxcvbnm)
 WP_CLI_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
-WP_CLI_USER_EMAIL=$(makepasswd --minchars 3 --maxchars 7)@nonexistentdomain.net
+WP_CLI_USER_EMAIL=$(makepasswd --minchars 3 --maxchars 7 --string=qwertyuiopasdfghjklzxcvbnm)@nonexistentdomain.net
 
 sudo -u www wp core install --url=127.0.0.1 --path='/usr/local/www/apache24/data/' --title="GWIT Hosted Wordpress Site" --admin_user=$WP_CLI_USERNAME --admin_password=$WP_CLI_USER_PASSWORD --admin_email=${WP_CLI_USER_EMAIL} &> /dev/null
 sudo -u www wp --path='/usr/local/www/apache24/data/' rewrite structure '/%postname%/' &> /dev/null
