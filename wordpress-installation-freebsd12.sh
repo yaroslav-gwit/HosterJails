@@ -455,7 +455,7 @@ sudo -u www wp --path='/usr/local/www/apache24/data/' plugin delete akismet hell
 sudo -u www wp --path='/usr/local/www/apache24/data/' site empty --yes &> /dev/null
 sudo -u www wp --path='/usr/local/www/apache24/data/' theme delete twentyseventeen twentynineteen &> /dev/null
 
-printf "${GREEN}Done${NC}\n"
+printf " ..... ${GREEN}Done${NC}\n"
 
 ## Note with all credentials for later use ##
 printf "Writing down all passwords to ${GREEN}wordpress-creds.txt${NC}: "
@@ -472,7 +472,7 @@ echo "DB_WPDB_NAME" - $DB_WPDB_NAME >> /root/wordpress-creds.txt
 echo "DB_WPDB_USER" - $DB_WPDB_USER >> /root/wordpress-creds.txt
 echo "DB_WPDB_USER_PASSWORD" - $DB_WPDB_USER_PASSWORD >> /root/wordpress-creds.txt
 
-printf "${GREEN}Done${NC} \n"
+printf " ..... ${GREEN}Done${NC} \n"
 printf "\n"
 
 ## Restart apache and make sure that it's running ##
