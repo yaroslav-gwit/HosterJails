@@ -17,5 +17,5 @@ For FreeBSD 12:<br>
 - Apache2 config file is here: <code>/usr/local/etc/apache24/httpd.conf</code>
 > There is also <code>/usr/local/etc/apache24/httpd.conf.BACKUP</code>, in case you'd like to check the defaults, add more modules, etc.
 - To apply any PHP.INI settings, edit <code>/usr/local/www/apache24/data/.htaccess</code> and follow the example there.
-- The installation includes WP-CLI. To run a command with WP-CLI, it must start this way:
+- The installation includes WP-CLI. To run a command with WP-CLI, it must start this way:<br>
 <code>sudo -u www wp --path='/usr/local/www/apache24/data/'</code> THEN_YOUR_OPTIONS_HERE
