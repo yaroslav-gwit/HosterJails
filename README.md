@@ -6,11 +6,15 @@ Script was tested on the following FreeBSD releases: 12.1, 12.2. Please let me k
 > Apache and MariaDB will listen on the default ports, so if you are binding your Jails/VMs to the same IP as your host, manually edit the config files to fit your environment.
 
 #### First, run this command to install the required software, and make *bash* a default shell.
-<code>pkg update -f && pkg install -y bash curl && chsh -s bash root</code>
+```
+pkg update -f && pkg install -y bash curl && chsh -s bash root
+```
 
 #### Then logout for the changes to apply, log back in and run this oneliner. Run the script as root, *sudo* is not supported at the moment.
 For FreeBSD 12:<br>
-<code>curl -s https://raw.githubusercontent.com/yaroslav-gwit/freebsd-wordpress-autoinstaller/main/wordpress-installation-freebsd12.sh | bash - </code>
+```
+curl -s https://raw.githubusercontent.com/yaroslav-gwit/freebsd-wordpress-autoinstaller/main/wordpress-installation-freebsd12.sh | bash -
+```
 
 #### Couple of notes:
 - All WordPress files are here: <code>/usr/local/www/apache24/data/</code>
