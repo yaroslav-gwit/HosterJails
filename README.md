@@ -20,3 +20,7 @@ For FreeBSD 12:<br>
 - The installation includes WP-CLI. To run a command with WP-CLI, it must start this way:<br>
 <code>sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE</code>
 - The installation is ready to be placed behind a reverse web proxy, like NGINX or HAProxy. REMOTE IP Apache module is installed and configured. WP-CONFIG.PHP is also slightly altered to play nicely with HTTPS reverse proxy.
+- Only HTTPS(443) port is active, to encrypt traffic between the proxy and backend.
+- All the default WordPress resoruces are removed upon login. You'll get a cleanest installation you can think of.
+
+> Distlamer: I am not a superhuman-sysadmin, although I am always trying to keep up with the best practices, I could still make a mistake somewhere, because of that Apache2/PHP74/MariaDB10.3 may have some weak points in it's config. Open an issue and I'll fix everything ASAP. Thank you.
