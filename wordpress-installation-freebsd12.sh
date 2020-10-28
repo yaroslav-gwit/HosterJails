@@ -1,38 +1,24 @@
 #!/usr/local/bin/bash
 
+## Set the colors ##
+NC='\033[0m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+
 if [[ $USER = root ]]; then
-        printf "You are root!\n"
+        printf "You ${GREEN}passed the root user check${NC}, all good.\n"
 else
         printf "You are not root!!! Log in as root, please.\n" && exit
 fi
 
 if [[ $SHELL = $(which bash) ]]; then
-        printf "bash is a sane choice of shell, proceeding with the install.\n"
+        printf "bash is a sane choice of shell, ${GREEN}proceeding with the install${NC}.\n"
 else
         printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n" && \
         pkg update -fq &> /dev/null && pkg install -y bash &> /dev/null \
         chsh -s $(which bash) $USER \
         && exit
 fi
-
-## Set the colors ##
-NC='\033[0m'
-BLACK='\033[0;30m'
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BROWN_ORANGE='\033[0;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-LIGHTGRAY='\033[0;37m'
-DARKGRAY='\033[1;30m'
-LIGHTRED='\033[1;31m'
-LIGHTGREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-LIGHTBLUE='\033[1;34m'
-LIGHTPURPLE='\033[1;35m'
-LIGHTCYAN='\033[1;36m'
-WHITE='\033[1;37m'
 
 printf "${GREEN}Starting the installation${NC}\n"
 printf "Installing and configuring software: "
