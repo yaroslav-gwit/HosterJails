@@ -15,5 +15,5 @@ For FreeBSD 12:<br>
 #### Couple of notes:
 - All WordPress files are here: <code>/usr/local/www/apache24/data/</code>
 - Apache2 config file is here: <code>/usr/local/etc/apache24/httpd.conf</code>
-> There is <code>also /usr/local/etc/apache24/httpd.conf.BACKUP</code>, in case you'd like to check the defaults, add more modules, etc.
+> There is also <code>/usr/local/etc/apache24/httpd.conf.BACKUP</code>, in case you'd like to check the defaults, add more modules, etc.
 - To apply any PHP.INI settings, edit <code>/usr/local/www/apache24/data/.htaccess</code> and follow the example there.
