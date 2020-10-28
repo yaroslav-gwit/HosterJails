@@ -1,6 +1,6 @@
 Yet another bash script to automate WordPress installation for FreeBSD.
 
-Currently supported releases of FreeBSD are: 12.1, 12.2.
+Script was tested on the following FreeBSD releases: 12.1, 12.2. Please let me know if you tried any other release and it worked.
 
 ### This script will automatically install a fresh copy of WordPress along with all it's dependencies (PHP7.4/Apache24/MariaDB10.3) onto your FreeBSD Box. Works on Jails, VMs and bare metal installs.
 > Apache and MariaDB will listen on the default ports, so if you are binding your Jails/VMs to the same IP as your host, manually edit the config files to fit your environment.
