@@ -486,8 +486,10 @@ IPADDR=$(ifconfig | grep "192\|10\|172" | awk '{print $2}' | awk '/^192|^10|^172
 #printf "The installation is now finished. Go to ${CYAN}https://${IPADDR}${NC} or \
 #${CYAN}https://$(hostname)${NC} or ${CYAN}https://$(curl -s ifconfig.me)${NC} to configure your new site. \n"
 
-printf "The installation is now finished. In case you forgot, this Jail IP is: \
-${CYAN}${IPADDR}${NC} or ${CYAN}https://${IPADDR}/wp-admin/${NC} if you'd like to configure or test WordPress.\n"
+printf "The installation is now finished. In case you forgot, this Jail IP is: ${CYAN}${IPADDR}${NC}\n"
+printf "Go to ${CYAN}https://${IPADDR}/wp-admin/${NC} if you'd like to configure or test your new WordPress website.\n"
+
+printf "\n"
 
 ## Printout username and password: ##
 printf "Your new site username: "
