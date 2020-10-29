@@ -280,8 +280,43 @@ printf "."
 
 ## Download the latest version of WordPress, move it into the correct folder and assign right permissions ##
 cd /tmp
-fetch http://wordpress.org/latest.tar.gz &> /dev/null
-tar xf /tmp/latest.tar.gz
+
+if [[ ! -f /tmp/local.tar.gz ]] ; then
+	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
+fi
+
+if [[ -f /tmp/local.tar.gz ]] && [[ ! -f local2.tar.gz ]]; then
+	sleep 20
+	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
+
+elif [[ ! -f /tmp/local.tar.gz ]] && [[ ! -f local2.tar.gz ]]; then
+	sleep 20
+	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
+	sleep 20
+	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
+
+elif [[ ! -f /tmp/local.tar.gz ]] && [[ ! -f local2.tar.gz ]]; then
+    printf "${RED}It seems like you've got problems with the internet connection (or WordPress is limiting your connection rate/download speed). Terminating the installation. Try a bit later.${NC}\n\n"
+    exit
+fi
+
+while [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; do
+	sleep 20
+	if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
+		rm /tmp/local.tar.gz
+		curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
+	fi
+	sleep 20
+	if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then 
+        rm /tmp/local2.tar.gz
+	    curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
+	fi
+	if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
+		printf "${RED}WordPress archive file is broken{$NC}, will retry the download process, until I get it right!\n"
+	fi
+done
+
+tar xf /tmp/local.tar.gz
 
 printf "."
 
