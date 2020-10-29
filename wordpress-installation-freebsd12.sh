@@ -47,7 +47,7 @@ pkg install -y nano htop bmon iftop makepasswd sudo figlet &> /dev/null
 printf "."
 
 ## Set the correct banner ##
-figlet GATEWAY - IT HOSTING > /etc/motd
+figlet GATEWAY - IT > /etc/motd
 service motd restart &> /dev/null
 
 ## Up to 12 Oct 2020 the newest version of working MariaDB of FreeBSD was 10.3, that's why it is used here. ##
@@ -120,11 +120,12 @@ EOF_ENABLEPHPFILES
 printf "."
 
 ## Make a selfsigned SSL cert
-mkdir /ssl
+mkdir -p /usr/local/www/apache24/ssl/
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /ssl/self.key -out /ssl/self.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=Gateway-IT Department/CN=gateway-it.intranet" &> /dev/null
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/www/apache24/ssl/self.key -out /usr/local/www/apache24/ssl/self.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=Gateway-IT Department/CN=gateway-it.intranet" &> /dev/null
 
-chown -R www:www /ssl
+chown www:www /usr/local/www/apache24/ssl/self.key
+chown www:www /usr/local/www/apache24/ssl/self.crt
 
 printf ". "
 
