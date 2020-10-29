@@ -197,8 +197,8 @@ ServerAdmin slv@yari.pw
 </Directory>
 
 SSLEngine on
-SSLCertificateFile /ssl/self.crt
-SSLCertificateKeyFile /ssl/self.key
+SSLCertificateFile /usr/local/www/apache24/ssl/self.crt
+SSLCertificateKeyFile /usr/local/www/apache24/ssl/self.key
 
 DocumentRoot "/usr/local/www/apache24/data"
 <Directory "/usr/local/www/apache24/data">
