@@ -24,16 +24,17 @@ WHITE='\033[1;37m'
 if [[ $USER = root ]]; then
         printf "You ${GREEN}passed the root user check${NC}, all good.\n"
 else
-        printf "You are not root!!! Log in as root, please.\n" && exit
+        printf "You are not root!!! Log in as root, please.\n"
+        exit
 fi
 
 if [[ $SHELL = $(which bash) ]]; then
         printf "bash is a sane choice of shell, ${GREEN}proceeding with the install${NC}.\n"
 else
-        printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n" && \
-        pkg update -fq &> /dev/null && pkg install -y bash &> /dev/null \
-        chsh -s $(which bash) $USER \
-        && exit
+        printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n"
+        pkg install -y bash &> /dev/null
+        chsh -s bash root
+        exit
 fi
 
 printf "\n"
