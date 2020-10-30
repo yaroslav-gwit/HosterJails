@@ -25,7 +25,7 @@ curl -s https://raw.githubusercontent.com/yaroslav-gwit/freebsd-wordpress-autoin
 ```
 sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE
 ```
-- The installation is ready to be placed behind a reverse web proxy, like NGINX or HAProxy. REMOTE IP Apache module is installed and configured. WP-CONFIG.PHP is also slightly altered to play nicely with HTTPS reverse proxy.
+- The installation is designed to be placed behind a HTTPS reverse proxy, like NGINX or HAProxy. REMOTE IP Apache module is installed and configured. WP-CONFIG.PHP is also slightly altered to play nicely with HTTPS reverse proxy.
 - Only HTTPS(443) port is active, to encrypt traffic between the proxy and backend.
 - All the default WordPress resoruces are removed upon login. You'll get a cleanest WordPress installation you can think of.
 
