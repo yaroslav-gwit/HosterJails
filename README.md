@@ -33,6 +33,6 @@ sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE
 
 <br>
 <br>
-
+<hr>
 #### Consider donating to support a quicker release of new content :)
 https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BYZMNVH4QH3L2&source=url
