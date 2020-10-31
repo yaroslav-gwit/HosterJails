@@ -32,7 +32,7 @@ sudo -u www wp --path='/usr/local/www/apache24/data/' THEN_YOUR_OPTIONS_HERE
 > Disclamer: I am not a superhuman-sysadmin, although I am always trying to keep up with the best practices, I could still make a mistake somewhere, because of that Apache2/PHP74/MariaDB10.3 may have some weak points in it's config. Open an issue and I'll fix everything ASAP. Also, if your WordPress installation requires an additional PHP module, kindly let me know, and I'll add it to the list. Thank you.
 
 <br>
-<br>
 <hr>
+
 #### Consider donating to support a quicker release of new content :)
 https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BYZMNVH4QH3L2&source=url
