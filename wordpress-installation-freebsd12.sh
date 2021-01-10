@@ -29,7 +29,7 @@ else
 fi
 
 if [[ ${SHELL} = $(which bash) ]] || [[ ${SHELL} = /usr/local/bin/bash ]] || [[ ${SHELL} = /bin/bash ]]; then
-	printf "bash is a sane choice of shell, ${GREEN}proceeding with the install${NC}.\n"
+	printf "bash is a sane choise of shell, ${GREEN}proceeding with the install${NC}.\n"
 
 else
     printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n"
@@ -44,7 +44,7 @@ printf "Installing and configuring software: "
 ## Install the software required for basic jail stuff ##
 pkg update -fq &> /dev/null
 pkg upgrade -y &> /dev/null
-pkg install -y nano htop bmon iftop makepasswd sudo figlet &> /dev/null
+pkg install -y nano htop bmon iftop pwgen sudo figlet &> /dev/null
 
 printf "."
 
@@ -66,11 +66,15 @@ service mysql-server start &> /dev/null
 #### Create if check to perform health check on MariaDB server and Apache24 ####
 
 ## Generate all of the random values/secrets that are required in the setup ##
-DB_ROOT_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
-DB_WPDB_NAME=wpdb_$(makepasswd --minchars 3 --maxchars 5 --string=qwertyuiopasdfghjklzxcvbnm)
-DB_WPDB_USER=wpdbuser_$(makepasswd --minchars 4 --maxchars 6 --string=qwertyuiopasdfghjklzxcvbnm)
-DB_WPDB_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 53)
+#DB_ROOT_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
+#DB_WPDB_NAME=wpdb_$(makepasswd --minchars 3 --maxchars 5 --string=qwertyuiopasdfghjklzxcvbnm)
+#DB_WPDB_USER=wpdbuser_$(makepasswd --minchars 4 --maxchars 6 --string=qwertyuiopasdfghjklzxcvbnm)
+#DB_WPDB_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 53)
 
+DB_ROOT_PASSWORD=$(pwgen $(echo $(( $RANDOM % 11 + 51 ))) 1)
+DB_WPDB_NAME=wpdb_$(pwgen $(echo $(( $RANDOM % 1 + 3 ))) 1 --no-numerals --no-capitalize)
+DB_WPDB_USER=wpdbuser_$(pwgen $(echo $(( $RANDOM % 1 + 3 ))) 1 --no-numerals --no-capitalize)
+DB_WPDB_USER_PASSWORD=$(pwgen $(echo $(( $RANDOM % 11 + 51 ))) 1)
 
 ## Secure the MariaDB install ##
 mysql_secure_installation <<EOF_MSQLSI &> /dev/null
@@ -82,7 +86,7 @@ y
 y
 EOF_MSQLSI
 
-mysql <<EOF_SETROOTPASS
+mysql << EOF_SETROOTPASS
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${DB_ROOT_PASSWORD}');
 FLUSH PRIVILEGES;
 EOF_SETROOTPASS
@@ -91,7 +95,7 @@ EOF_SETROOTPASS
 #### Create check if password lockdown worked, if not, kill the process ####
 
 ## Create wordpress database and assign a new user to it ##
-mysql -uroot -p${DB_ROOT_PASSWORD}<<EOF_WPDATABASE
+mysql -uroot -p${DB_ROOT_PASSWORD} << EOF_WPDATABASE
 CREATE DATABASE ${DB_WPDB_NAME};
 CREATE USER '${DB_WPDB_USER}'@localhost IDENTIFIED BY '${DB_WPDB_USER_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${DB_WPDB_NAME}.* TO ${DB_WPDB_USER}@'localhost';
@@ -190,7 +194,7 @@ User www
 Group www
 </IfModule>
 
-ServerAdmin slv@yari.pw
+ServerAdmin random@rdomain.intranet
 
 <Directory />
     AllowOverride None
@@ -341,15 +345,24 @@ echo "php_value max_input_time 300" >> /usr/local/www/apache24/data/.htaccess
 printf "."
 
 ## Create a proper WP_CONFIG.PHP, populate it with required DB info and randomize the required values ##
-WP_DB_PREFIX=$(makepasswd --chars 3 --string=qwertyuiopasdfghjklzxcvbnm)
-WP_SALT1=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT2=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT3=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT4=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT5=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT6=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT7=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-WP_SALT8=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+WP_DB_PREFIX=$(pwgen $(echo $(( $RANDOM % 1 + 3 ))) 1 --no-numerals --no-capitalize)
+WP_SALT1=$(pwgen 55 1 --secure)
+WP_SALT2=$(pwgen 55 1 --secure)
+WP_SALT3=$(pwgen 55 1 --secure)
+WP_SALT4=$(pwgen 55 1 --secure)
+WP_SALT5=$(pwgen 55 1 --secure)
+WP_SALT6=$(pwgen 55 1 --secure)
+WP_SALT7=$(pwgen 55 1 --secure)
+WP_SALT8=$(pwgen 55 1 --secure)
+
+#WP_SALT1=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT2=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT3=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT4=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT5=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT6=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT7=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+#WP_SALT8=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
 
 cat << 'EOF_WPCONFIG' | cat > /usr/local/www/apache24/data/wp-config.php
 <?php
@@ -478,15 +491,31 @@ printf "${GREEN}Done${NC}\n"
 printf "Initializing the WordPress installation and removing the default trash: "
 
 ## Initialize new WordPress website with WP-CLI, nuke default stuff ##
-WP_CLI_USERNAME=defadm_$(makepasswd --chars 7 --string=qwertyuiopasdfghjklzxcvbnm)
-WP_CLI_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
-WP_CLI_USER_EMAIL=$(makepasswd --minchars 3 --maxchars 7 --string=qwertyuiopasdfghjklzxcvbnm)@nonexistentdomain.net
+#WP_CLI_USERNAME=defadm_$(makepasswd --chars 7 --string=qwertyuiopasdfghjklzxcvbnm)
+#WP_CLI_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
+#WP_CLI_USER_EMAIL=$(makepasswd --minchars 3 --maxchars 7 --string=qwertyuiopasdfghjklzxcvbnm)@nonexistentdomain.net
 
-sudo -u www wp core install --url=127.0.0.1 --path='/usr/local/www/apache24/data/' --title="GWIT Hosted Wordpress Site" --admin_user=$WP_CLI_USERNAME --admin_password=$WP_CLI_USER_PASSWORD --admin_email=${WP_CLI_USER_EMAIL} &> /dev/null
-sudo -u www wp --path='/usr/local/www/apache24/data/' rewrite structure '/%postname%/' &> /dev/null
-sudo -u www wp --path='/usr/local/www/apache24/data/' plugin delete akismet hello &> /dev/null
-sudo -u www wp --path='/usr/local/www/apache24/data/' site empty --yes &> /dev/null
-sudo -u www wp --path='/usr/local/www/apache24/data/' theme delete twentyseventeen twentynineteen &> /dev/null
+WP_CLI_USERNAME=defadm_$(pwgen $(echo $(( $RANDOM % 2 + 3 ))) 1 --no-capitalize --no-numerals)
+WP_CLI_USER_PASSWORD=$(pwgen $(echo $(( $RANDOM % 11 + 51 ))) 1 --secure)
+WP_CLI_USER_EMAIL=$(pwgen $(echo $(( $RANDOM % 2 + 3 ))) 1 --no-capitalize --no-numerals)@nonexistentdomain.net
+
+mkdir -p /home/www/.wp-cli
+touch /home/www/.wp-cli/config.yml
+cat << 'EOF_WPCLIYML' | cat > /home/www/.wp-cli/config.yml
+path: /usr/local/www/apache24/data/
+apache_modules:
+  - mod_rewrite
+EOF_WPCLIYML
+
+chown -R www /home/www
+pw usermod www -d /home/www
+#sed -i '' "/World Wide Web Owner/s/\/nonexistent/\/home\/www/" /etc/master.passwd
+
+sudo -u www wp core install --url=127.0.0.1 --title="GWIT Hosted Wordpress Site" --admin_user=$WP_CLI_USERNAME --admin_password=$WP_CLI_USER_PASSWORD --admin_email=${WP_CLI_USER_EMAIL} &> /dev/null
+sudo -u www wp rewrite structure '/%postname%/' --hard &> /dev/null
+sudo -u www wp plugin delete akismet hello &> /dev/null
+sudo -u www wp site empty --yes &> /dev/null
+sudo -u www wp theme delete twentyseventeen twentynineteen twentytwenty &> /dev/null
 
 printf " ..... ${GREEN}Done${NC}\n"
 
@@ -519,13 +548,13 @@ IPADDR=$(ifconfig | grep "192\|10\|172" | awk '{print $2}' | awk '/^192|^10|^172
 #printf "The installation is now finished. Go to ${CYAN}https://${IPADDR}${NC} or \
 #${CYAN}https://$(hostname)${NC} or ${CYAN}https://$(curl -s ifconfig.me)${NC} to configure your new site. \n"
 
-printf "The installation is now finished. In case you forgot, this Jail IP is: ${CYAN}${IPADDR}${NC}\n"
+printf "The installation is now finished. In case you forgot, this VM IP is: ${CYAN}${IPADDR}${NC}\n"
 printf "Go to ${CYAN}https://${IPADDR}/wp-admin/${NC} if you'd like to configure or test your new WordPress website.\n"
 
 printf "\n"
 
 ## Printout username and password: ##
-printf "Your new site username: "
+printf "Your admin username: "
 printf "${CYAN}$WP_CLI_USERNAME${NC} "
 printf "and password: "
 printf "${CYAN}$WP_CLI_USER_PASSWORD${NC}\n"
