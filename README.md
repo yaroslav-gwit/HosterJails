@@ -13,7 +13,7 @@ pkg update -f && pkg install -y bash curl && chsh -s bash root
 #### Then logout for the changes to apply, log back in and run this oneliner. Run the script as root, *sudo* is not supported at the moment.
 For FreeBSD 12:<br>
 ```
-curl -s https://raw.githubusercontent.com/yaroslav-gwit/freebsd-wordpress-autoinstaller/main/wordpress-installation-freebsd12.sh | bash -
+curl -s https://raw.githubusercontent.com/yaroslav-gwit/WordpressAutoinstallerSh/main/wordpress-installation-freebsd12.sh | bash -
 ```
 
 #### Couple of notes:
