@@ -503,7 +503,10 @@ sudo -u www wp core install --url=127.0.0.1 --title="GWIT Hosted Wordpress Site"
 sudo -u www wp rewrite structure '/%postname%/' --hard &> /dev/null
 sudo -u www wp plugin delete akismet hello &> /dev/null
 sudo -u www wp site empty --yes &> /dev/null
-sudo -u www wp theme delete twentyseventeen twentynineteen twentytwenty &> /dev/null
+# sudo -u www wp theme delete twentyseventeen &> /dev/null
+sudo -u www wp theme delete twentynineteen &> /dev/null
+sudo -u www wp theme delete twentytwenty &> /dev/null
+sudo -u www wp theme delete twentytwentyone &> /dev/null
 sudo -u www wp user update "${WP_CLI_USERNAME}" --user_pass="${WP_CLI_USER_PASSWORD}" &> /dev/null
 
 printf " ..... ${GREEN}Done${NC}\n"
