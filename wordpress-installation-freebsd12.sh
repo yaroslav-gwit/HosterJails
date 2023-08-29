@@ -186,7 +186,7 @@ LoadModule autoindex_module libexec/apache24/mod_autoindex.so
 LoadModule dir_module libexec/apache24/mod_dir.so
 LoadModule alias_module libexec/apache24/mod_alias.so
 LoadModule rewrite_module libexec/apache24/mod_rewrite.so
-LoadModule php7_module        libexec/apache24/libphp7.so
+LoadModule php_module        libexec/apache24/libphp.so
 
 # Third party modules
 IncludeOptional etc/apache24/modules.d/[0-9][0-9][0-9]_*.conf
