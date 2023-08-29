@@ -504,6 +504,7 @@ sudo -u www wp rewrite structure '/%postname%/' --hard &> /dev/null
 sudo -u www wp plugin delete akismet hello &> /dev/null
 sudo -u www wp site empty --yes &> /dev/null
 sudo -u www wp theme delete twentyseventeen twentynineteen twentytwenty &> /dev/null
+sudo -u www wp user update "${WP_CLI_USERNAME}" --user_pass="${WP_CLI_USER_PASSWORD}" &> /dev/null
 
 printf " ..... ${GREEN}Done${NC}\n"
 
