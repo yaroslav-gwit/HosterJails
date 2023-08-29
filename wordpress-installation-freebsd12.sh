@@ -44,7 +44,11 @@ printf "Installing and configuring software: "
 ## Install the software required for basic jail stuff ##
 pkg update -fq &> /dev/null
 pkg upgrade -y &> /dev/null
-pkg install -y nano htop bmon iftop pwgen sudo figlet &> /dev/null
+pkg install -y nano htop bmon iftop sudo figlet &> /dev/null
+
+## Download my own implementation of random password generator
+curl -sS "https://gitlab.gateway-it.com/yaroslav/NimPasswordGenerator/-/raw/main/bin/password_generator_freebsd_x64?ref_type=heads" --output /bin/password_generator
+chmod +x /bin/password_generator
 
 printf "."
 
@@ -66,15 +70,10 @@ service mysql-server start &> /dev/null
 #### Create if check to perform health check on MariaDB server and Apache24 ####
 
 ## Generate all of the random values/secrets that are required in the setup ##
-#DB_ROOT_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
-#DB_WPDB_NAME=wpdb_$(makepasswd --minchars 3 --maxchars 5 --string=qwertyuiopasdfghjklzxcvbnm)
-#DB_WPDB_USER=wpdbuser_$(makepasswd --minchars 4 --maxchars 6 --string=qwertyuiopasdfghjklzxcvbnm)
-#DB_WPDB_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 53)
-
-DB_ROOT_PASSWORD=$(pwgen $(echo $(( $RANDOM % 11 + 51 ))) 1)
-DB_WPDB_NAME=wpdb_$(pwgen $(echo $(( $RANDOM % 1 + 3 ))) 1 --no-numerals --no-capitalize)
-DB_WPDB_USER=wpdbuser_$(pwgen $(echo $(( $RANDOM % 1 + 3 ))) 1 --no-numerals --no-capitalize)
-DB_WPDB_USER_PASSWORD=$(pwgen $(echo $(( $RANDOM % 11 + 51 ))) 1)
+DB_ROOT_PASSWORD=$(password_generator generate --length 35)
+DB_WPDB_NAME=wpdb_$(password_generator generate --length 4 --lower)
+DB_WPDB_USER=wpdbuser_$(password_generator generate --length 6 --lower)
+DB_WPDB_USER_PASSWORD=$(password_generator generate --length 35)
 
 ## Secure the MariaDB install ##
 mysql_secure_installation <<EOF_MSQLSI &> /dev/null
@@ -347,24 +346,15 @@ echo "php_value max_input_time 300" >> /usr/local/www/apache24/data/.htaccess
 printf "."
 
 ## Create a proper WP_CONFIG.PHP, populate it with required DB info and randomize the required values ##
-WP_DB_PREFIX=$(pwgen $(echo $(( $RANDOM % 1 + 3 ))) 1 --no-numerals --no-capitalize)
-WP_SALT1=$(pwgen 55 1 --secure)
-WP_SALT2=$(pwgen 55 1 --secure)
-WP_SALT3=$(pwgen 55 1 --secure)
-WP_SALT4=$(pwgen 55 1 --secure)
-WP_SALT5=$(pwgen 55 1 --secure)
-WP_SALT6=$(pwgen 55 1 --secure)
-WP_SALT7=$(pwgen 55 1 --secure)
-WP_SALT8=$(pwgen 55 1 --secure)
-
-#WP_SALT1=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT2=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT3=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT4=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT5=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT6=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT7=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
-#WP_SALT8=$(makepasswd --chars 55 --string=qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM{}*%^@[])
+WP_DB_PREFIX=$(password_generator generate --length 4 --lower)
+WP_SALT1=$(password_generator generate --length 55)
+WP_SALT2=$(password_generator generate --length 55)
+WP_SALT3=$(password_generator generate --length 55)
+WP_SALT4=$(password_generator generate --length 55)
+WP_SALT5=$(password_generator generate --length 55)
+WP_SALT6=$(password_generator generate --length 55)
+WP_SALT7=$(password_generator generate --length 55)
+WP_SALT8=$(password_generator generate --length 55)
 
 cat << 'EOF_WPCONFIG' | cat > /usr/local/www/apache24/data/wp-config.php
 <?php
@@ -493,13 +483,9 @@ printf "${GREEN}Done${NC}\n"
 printf "Initializing the WordPress installation and removing the default trash: "
 
 ## Initialize new WordPress website with WP-CLI, nuke default stuff ##
-#WP_CLI_USERNAME=defadm_$(makepasswd --chars 7 --string=qwertyuiopasdfghjklzxcvbnm)
-#WP_CLI_USER_PASSWORD=$(makepasswd --minchars 43 --maxchars 51)
-#WP_CLI_USER_EMAIL=$(makepasswd --minchars 3 --maxchars 7 --string=qwertyuiopasdfghjklzxcvbnm)@nonexistentdomain.net
-
-WP_CLI_USERNAME=defadm_$(pwgen $(echo $(( $RANDOM % 2 + 3 ))) 1 --no-capitalize --no-numerals)
-WP_CLI_USER_PASSWORD=$(pwgen $(echo $(( $RANDOM % 11 + 51 ))) 1 --secure)
-WP_CLI_USER_EMAIL=$(pwgen $(echo $(( $RANDOM % 2 + 3 ))) 1 --no-capitalize --no-numerals)@nonexistentdomain.net
+WP_CLI_USERNAME=defadm_$(password_generator generate --length 5 --lower)
+WP_CLI_USER_PASSWORD=$(password_generator generate --length 35)
+WP_CLI_USER_EMAIL=$(password_generator generate --length 5 --lower)@nonexistentdomain.net
 
 mkdir -p /home/www/.wp-cli
 touch /home/www/.wp-cli/config.yml
