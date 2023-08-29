@@ -104,10 +104,8 @@ EOF_WPDATABASE
 
 printf "."
 
-##Install all of the required PHP stuff ##
-pkg install -y mod_php80 php80-mysqli php80-tokenizer php80-zlib php80-zip php80 rsync php80-gd curl php80-curl php80-xml php80-bcmath php80-mbstring php80-pecl-imagick php80-pecl-imagick-im7 php80-iconv php80-filter php80-pecl-json_post php80-pear-Services_JSON php80-exif php80-fileinfo php80-dom php80-session php80-ctype php80-simplexml php80-phar php80-gmp &> /dev/null
-# OLD PHP 7.4 VERSION, WILL BE REMOVED LATER
-# pkg install -y mod_php74 php74-mysqli php74-tokenizer php74-zlib php74-zip php74 rsync php74-gd curl php74-curl php74-xml php74-bcmath php74-json php74-mbstring php74-pecl-imagick php74-pecl-imagick-im7 php74-iconv php74-filter php74-pecl-json_post php74-pecl-jsond php74-pear-Services_JSON php74-exif php74-fileinfo php74-openssl php74-dom php74-session php74-ctype php74-simplexml php74-phar php74-gmp &> /dev/null
+## Install all of the required PHP stuff ##
+pkg install -y mod_php80 php80-mysqli php80-tokenizer php80-zlib php80-zip php80 rsync php80-gd curl php80-curl php80-xml php80-bcmath php80-json php80-mbstring php80-pecl-imagick php80-pecl-imagick-im7 php80-iconv php80-filter php80-pecl-json_post php80-pecl-jsond php80-pear-Services_JSON php80-exif php80-fileinfo php80-openssl php80-dom php80-session php80-ctype php80-simplexml php80-phar php80-gmp &> /dev/null
 
 printf "."
 
@@ -186,7 +184,7 @@ LoadModule autoindex_module libexec/apache24/mod_autoindex.so
 LoadModule dir_module libexec/apache24/mod_dir.so
 LoadModule alias_module libexec/apache24/mod_alias.so
 LoadModule rewrite_module libexec/apache24/mod_rewrite.so
-LoadModule php7_module        libexec/apache24/libphp7.so
+LoadModule php8_module        libexec/apache24/libphp8.so
 
 # Third party modules
 IncludeOptional etc/apache24/modules.d/[0-9][0-9][0-9]_*.conf
