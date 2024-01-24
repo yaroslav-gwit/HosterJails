@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/usr/bin/env bash
 
 printf "\n"
 
@@ -28,14 +28,13 @@ if [[ $USER = root ]]; then
     # shellcheck disable=SC2059
     printf "You ${GREEN}passed the root user check${NC}, all good.\n"
 else
-    printf "You are not root!!! Log in as root, please.\n"
+    printf "You are not root! Log in as root, please.\n"
     exit
 fi
 
 if [[ ${SHELL} = $(which bash) ]] || [[ ${SHELL} = /usr/local/bin/bash ]] || [[ ${SHELL} = /bin/bash ]]; then
     # shellcheck disable=SC2059
     printf "bash is a sane choice of shell, ${GREEN}proceeding with the installation${NC}.\n"
-
 else
     printf "This is not bash! Install and set bash as your default shell, then logout, login and start the script again.\n"
     pkg install -y bash &>/dev/null
@@ -50,6 +49,7 @@ printf "Installing and configuring software "
 pkg update -fq &>/dev/null
 pkg upgrade -y &>/dev/null
 pkg install -y nano htop bmon iftop sudo figlet &>/dev/null
+printf "."
 
 ## Download my own implementation of random password generator
 curl -sS "https://gitlab.gateway-it.com/yaroslav/NimPasswordGenerator/-/raw/main/bin/password_generator_freebsd_x64?ref_type=heads" --output /bin/password_generator
@@ -114,24 +114,27 @@ pkg install -y php81 mod_php81 &>/dev/null
 (pkg install -y php81-mysqli || true) &>/dev/null
 (pkg install -y php81-tokenizer || true) &>/dev/null
 (pkg install -y php81-zlib || true) &>/dev/null
+printf "."
 (pkg install -y php81-zip || true) &>/dev/null
 (pkg install -y php81-gd || true) &>/dev/null
-printf "."
 (pkg install -y php81-curl || true) &>/dev/null
 (pkg install -y php81-xml || true) &>/dev/null
+printf "."
 (pkg install -y php81-intl || true) &>/dev/null
 (pkg install -y php81-bcmath || true) &>/dev/null
 (pkg install -y php81-mbstring || true) &>/dev/null
 (pkg install -y php81-pecl-imagick || true) &>/dev/null
+printf "."
 (pkg install -y php81-iconv || true) &>/dev/null
 (pkg install -y php81-filter || true) &>/dev/null
-printf "."
 (pkg install -y php81-pear-Services_JSON || true) &>/dev/null
 (pkg install -y php81-exif || true) &>/dev/null
+printf "."
 (pkg install -y php81-fileinfo || true) &>/dev/null
 (pkg install -y php81-session || true) &>/dev/null
 (pkg install -y php81-ctype || true) &>/dev/null
 (pkg install -y php81-simplexml || true) &>/dev/null
+printf "."
 (pkg install -y php81-phar || true) &>/dev/null
 (pkg install -y php81-gmp || true) &>/dev/null
 (pkg install -y php81-dom || true) &>/dev/null
@@ -535,9 +538,11 @@ sudo -u www wp rewrite structure '/%postname%/' --hard &>/dev/null
 sudo -u www wp plugin delete akismet hello &>/dev/null
 sudo -u www wp site empty --yes &>/dev/null
 # sudo -u www wp theme delete twentyseventeen &> /dev/null
-sudo -u www wp theme delete twentynineteen &>/dev/null
-sudo -u www wp theme delete twentytwenty &>/dev/null
+# sudo -u www wp theme delete twentynineteen &>/dev/null
+# sudo -u www wp theme delete twentytwenty &>/dev/null
 sudo -u www wp theme delete twentytwentyone &>/dev/null
+sudo -u www wp theme delete twentytwentytwo &>/dev/null
+sudo -u www wp theme delete twentytwentythree &>/dev/null
 sudo -u www wp user update "${WP_CLI_USERNAME}" --user_pass="${WP_CLI_USER_PASSWORD}" &>/dev/null
 
 # shellcheck disable=SC2059
@@ -583,7 +588,7 @@ printf "${CYAN}https://${IPADDR}/wp-admin/${NC}\n"
 printf "\n"
 
 # Print out the username and password:
-printf "To log-in as admin, use the following credentials: "
+printf "To log-in as admin, use the following credentials:\n"
 # shellcheck disable=SC2059
 printf "username -> ${CYAN}$WP_CLI_USERNAME${NC}\n"
 # shellcheck disable=SC2059

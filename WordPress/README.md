@@ -25,8 +25,8 @@ By the way, `VNet` Jails is the default and only option in `Hoster` 😉
 Install `bash`, `curl`, `git`, and make `bash` your default shell:
 
 ```shell
-pkg update -f
-pkg install -y bash curl git
+pkg update -fq
+pkg install -yq bash curl git
 chsh -s `which bash`
 ```
 
