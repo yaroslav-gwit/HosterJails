@@ -111,12 +111,30 @@ EOF_WP_DATABASE
 # Install the required PHP modules
 pkg install -y rsync curl &>/dev/null
 pkg install -y php81 mod_php81 &>/dev/null
+(pkg install -y php81-mysqli || true) &>/dev/null
+(pkg install -y php81-tokenizer || true) &>/dev/null
+(pkg install -y php81-zlib || true) &>/dev/null
+(pkg install -y php81-zip || true) &>/dev/null
+(pkg install -y php81-gd || true) &>/dev/null
 printf "."
-pkg install -y php81-mysqli php81-tokenizer php81-zlib php81-zip php81-gd php81-curl php81-xml &>/dev/null
-pkg install -y php81-intl php81-bcmath php81-mbstring php81-pecl-imagick php81-iconv php81-filter &>/dev/null
+(pkg install -y php81-curl || true) &>/dev/null
+(pkg install -y php81-xml || true) &>/dev/null
+(pkg install -y php81-intl || true) &>/dev/null
+(pkg install -y php81-bcmath || true) &>/dev/null
+(pkg install -y php81-mbstring || true) &>/dev/null
+(pkg install -y php81-pecl-imagick || true) &>/dev/null
+(pkg install -y php81-iconv || true) &>/dev/null
+(pkg install -y php81-filter || true) &>/dev/null
 printf "."
-pkg install -y php81pecl-json_post php81-pear-Services_JSON php81-exif php81-fileinfo php81-session &>/dev/null
-pkg install -y php81-ctype php81-simplexml php81-phar php81-gmp php81-dom &>/dev/null
+(pkg install -y php81-pear-Services_JSON || true) &>/dev/null
+(pkg install -y php81-exif || true) &>/dev/null
+(pkg install -y php81-fileinfo || true) &>/dev/null
+(pkg install -y php81-session || true) &>/dev/null
+(pkg install -y php81-ctype || true) &>/dev/null
+(pkg install -y php81-simplexml || true) &>/dev/null
+(pkg install -y php81-phar || true) &>/dev/null
+(pkg install -y php81-gmp || true) &>/dev/null
+(pkg install -y php81-dom || true) &>/dev/null
 
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 cat <<'EOF_ENABLE_PHP_FILES' | cat >/usr/local/etc/apache24/Includes/php.conf
