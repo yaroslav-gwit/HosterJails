@@ -30,14 +30,14 @@ pkg install -y bash curl git
 chsh -s `which bash`
 ```
 
-Logout and log back in for the changes to apply
+Logout and log back in for the changes to apply.
 
-> Run the script as root, `sudo` is not supported at the moment.
+> Switch to the `root` user at this point, `sudo` is not supported right now.
 
 Run this one-liner below to start the installation process:
 
 ```shell
-curl -S https://raw.githubusercontent.com/yaroslav-gwit/WordpressAutoinstallerSh/main/wordpress-installation-freebsd12.sh | bash -
+curl -sS "https://raw.githubusercontent.com/yaroslav-gwit/HosterJails/main/WordPress/wp-freebsd-release.sh" | bash -
 ```
 
 At the end of the installation process, you'll receive a similar notes to the below (which may include an information about your new service, admin credentials, etc):
@@ -53,7 +53,8 @@ username -> RANDOMLY_GENERATED_WP_USERNAME
 password -> RANDOMLY_GENERATED_WP_PASSWORD
 ```
 
-All the secret values will be saved in a file that only `root` user can read, so you don't need to save this info immediately - you can view it again at a later point.
+All the secret values will be saved in a file that only `root` user can access, so you don't need to save this info immediately - you can view it again at a later point.
+This is especially useful if you provide these WordPress installations to the end users - they can simply SSH in, and view the file to learn their website credentials.
 
 The credentials file itself is here:
 
