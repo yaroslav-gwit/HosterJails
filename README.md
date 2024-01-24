@@ -1,6 +1,6 @@
-# Hoster Jail Scripts 🚀
+# 🚀 Hoster Jail Scripts
 
-Welcome to the new (and favorite) Jail deployment automation repository, that will make installing your favorite software projects a breeze!
+Welcome to your new (and favorite) Jail deployment automation repository, that will make installing your favorite software projects on FreeBSD Jails a breeze!
 
 ## Overview
 
@@ -32,4 +32,4 @@ Feel free to explore the repository and discover scripts tailored for your prefe
 
 If you have scripts to contribute or improvements to suggest, we welcome your contributions. Fork the repository, make your changes, and submit a pull request. Let's make deployment automation even more accessible!
 
-### Happy deploying! 🚀
+### 🚀 Happy deploying!
