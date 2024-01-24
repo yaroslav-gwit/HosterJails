@@ -108,17 +108,17 @@ GRANT ALL PRIVILEGES ON ${DB_WPDB_NAME}.* TO ${DB_WPDB_USER}@'localhost';
 FLUSH PRIVILEGES;
 EOF_WP_DATABASE
 
-printf "."
-
 # Install the required PHP modules
-pkg install -y mod_php80 php80-mysqli php80-tokenizer php80-zlib php80-zip php80 rsync php80-gd curl php80-curl php80-xml php80-intl php80-bcmath php80-mbstring php80-pecl-imagick php80-pecl-imagick-im7 php80-iconv php80-filter php80-pecl-json_post php80-pear-Services_JSON php80-exif php80-fileinfo php80-dom php80-session php80-ctype php80-simplexml php80-phar php80-gmp &>/dev/null
-# OLD PHP 7.4 VERSION, TO BE REMOVED LATER
-# pkg install -y mod_php74 php74-mysqli php74-tokenizer php74-zlib php74-zip php74 rsync php74-gd curl php74-curl php74-xml php74-bcmath php74-json php74-mbstring php74-pecl-imagick php74-pecl-imagick-im7 php74-iconv php74-filter php74-pecl-json_post php74-pecl-jsond php74-pear-Services_JSON php74-exif php74-fileinfo php74-openssl php74-dom php74-session php74-ctype php74-simplexml php74-phar php74-gmp &> /dev/null
-
+pkg install -y rsync curl &>/dev/null
+pkg install -y php81 mod_php81 &>/dev/null
 printf "."
+pkg install -y php81-mysqli php81-tokenizer php81-zlib php81-zip php81-gd php81-curl php81-xml &>/dev/null
+pkg install -y php81-intl php81-bcmath php81-mbstring php81-pecl-imagick php81-iconv php81-filter &>/dev/null
+printf "."
+pkg install -y php81pecl-json_post php81-pear-Services_JSON php81-exif php81-fileinfo php81-session &>/dev/null
+pkg install -y php81-ctype php81-simplexml php81-phar php81-gmp php81-dom &>/dev/null
 
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
-
 cat <<'EOF_ENABLE_PHP_FILES' | cat >/usr/local/etc/apache24/Includes/php.conf
 <IfModule dir_module>
     DirectoryIndex index.php index.html

@@ -9,7 +9,7 @@ Please, do let me know if you tried any other release, and I'll add it to the li
 
 The script will automatically install a fresh copy of WordPress along with all it's dependencies (please, check the installation script to find out the exact list of PHP-related packages):
 
-- PHP 8.0 - WordPress supported PHP release, which hits a balance between compatibility, security and speed (subject to change in the future)
+- PHP 8.1 - WordPress supported PHP release, which hits a balance between compatibility, security and speed (subject to change in the future)
 - Apache 2.4
 - MariaDB 10.3
 
