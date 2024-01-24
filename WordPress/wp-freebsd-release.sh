@@ -34,17 +34,17 @@ fi
 
 if [[ ${SHELL} = $(which bash) ]] || [[ ${SHELL} = /usr/local/bin/bash ]] || [[ ${SHELL} = /bin/bash ]]; then
     # shellcheck disable=SC2059
-    printf "bash is a sane choice of shell, ${GREEN}proceeding with the install${NC}.\n"
+    printf "bash is a sane choice of shell, ${GREEN}proceeding with the installation${NC}.\n"
 
 else
-    printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n"
+    printf "This is not bash! Install and set bash as your default shell, then logout, login and start the script again.\n"
     pkg install -y bash &>/dev/null
     chsh -s bash root
     exit
 fi
 
 printf "\n"
-printf "Installing and configuring software: "
+printf "Installing and configuring software "
 
 ## Install the software required for basic jail stuff ##
 pkg update -fq &>/dev/null
@@ -68,10 +68,10 @@ printf "."
 
 ## Enable and start the services ##
 # sysrc apache24_enable=yes mysql_enable=yes &>/dev/null
-service apache24 enable &>/dev/null
-service apache24 start &>/dev/null
-service mysql-server enable &>/dev/null
-service mysql-server start &>/dev/null
+(service apache24 enable || true) &>/dev/null
+(service apache24 start || true) &>/dev/null
+(service mysql-server enable || true) &>/dev/null
+(service mysql-server start || true) &>/dev/null
 
 #### Create if check to perform health check on MariaDB server and Apache24 ####
 #### Create if check to perform health check on MariaDB server and Apache24 ####
@@ -144,7 +144,7 @@ printf ". "
 
 # shellcheck disable=SC2059
 printf "${GREEN}Done${NC}\n"
-printf "Downloading WordPress, WP-CLI and populating default config files: "
+printf "Downloading WordPress, WP-CLI and populating the default config files "
 
 ## Download and install wp-cli ##
 cd /root/
@@ -493,7 +493,7 @@ printf ". "
 
 # shellcheck disable=SC2059
 printf "${GREEN}Done${NC}\n"
-printf "Initializing the WordPress installation and removing the default trash: "
+printf "Initializing the WordPress installation and removing the default garbage "
 
 ## Initialize new WordPress website with WP-CLI, nuke default stuff ##
 WP_CLI_USERNAME=defadm_$(password_generator generate --length 5 --lower)
@@ -527,7 +527,7 @@ printf " ..... ${GREEN}Done${NC}\n"
 
 # Note down the credentials for a later use
 # shellcheck disable=SC2059
-printf "Writing down all passwords to ${GREEN}wordpress-creds.txt${NC}: "
+printf "Exporting all passwords into ${GREEN}wordpress-creds.txt${NC} "
 
 # shellcheck disable=SC2129
 echo "## Wordpress Web GUI username and password ##" >>/root/wordpress-creds.txt
