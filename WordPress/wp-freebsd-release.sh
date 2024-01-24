@@ -4,24 +4,28 @@ printf "\n"
 
 ## Set the colors ##
 NC='\033[0m'
-BLACK='\033[0;30m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
-BROWN_ORANGE='\033[0;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
-LIGHTGRAY='\033[0;37m'
-DARKGRAY='\033[1;30m'
-LIGHTRED='\033[1;31m'
-LIGHTGREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-LIGHTBLUE='\033[1;34m'
-LIGHTPURPLE='\033[1;35m'
-LIGHTCYAN='\033[1;36m'
-WHITE='\033[1;37m'
+# BLACK='\033[0;30m'
+# BROWN_ORANGE='\033[0;33m'
+# BLUE='\033[0;34m'
+# PURPLE='\033[0;35m'
+# LIGHTGRAY='\033[0;37m'
+# DARKGRAY='\033[1;30m'
+# LIGHTRED='\033[1;31m'
+# LIGHTGREEN='\033[1;32m'
+# YELLOW='\033[1;33m'
+# LIGHTBLUE='\033[1;34m'
+# LIGHTPURPLE='\033[1;35m'
+# LIGHTCYAN='\033[1;36m'
+# WHITE='\033[1;37m'
+
+# Exit on error
+set -e -u
 
 if [[ $USER = root ]]; then
+    # shellcheck disable=SC2059
     printf "You ${GREEN}passed the root user check${NC}, all good.\n"
 else
     printf "You are not root!!! Log in as root, please.\n"
@@ -29,11 +33,12 @@ else
 fi
 
 if [[ ${SHELL} = $(which bash) ]] || [[ ${SHELL} = /usr/local/bin/bash ]] || [[ ${SHELL} = /bin/bash ]]; then
-	printf "bash is a sane choise of shell, ${GREEN}proceeding with the install${NC}.\n"
+    # shellcheck disable=SC2059
+    printf "bash is a sane choice of shell, ${GREEN}proceeding with the install${NC}.\n"
 
 else
     printf "This is not bash! Installing and setting bash as your default shell, re-login and start the script again.\n"
-    pkg install -y bash &> /dev/null
+    pkg install -y bash &>/dev/null
     chsh -s bash root
     exit
 fi
@@ -42,9 +47,9 @@ printf "\n"
 printf "Installing and configuring software: "
 
 ## Install the software required for basic jail stuff ##
-pkg update -fq &> /dev/null
-pkg upgrade -y &> /dev/null
-pkg install -y nano htop bmon iftop sudo figlet &> /dev/null
+pkg update -fq &>/dev/null
+pkg upgrade -y &>/dev/null
+pkg install -y nano htop bmon iftop sudo figlet &>/dev/null
 
 ## Download my own implementation of random password generator
 curl -sS "https://gitlab.gateway-it.com/yaroslav/NimPasswordGenerator/-/raw/main/bin/password_generator_freebsd_x64?ref_type=heads" --output /bin/password_generator
@@ -53,18 +58,20 @@ chmod +x /bin/password_generator
 printf "."
 
 ## Set the correct banner ##
-figlet GATEWAY - IT > /etc/motd
-service motd restart &> /dev/null
+figlet GATEWAY - IT >/etc/motd
+service motd restart &>/dev/null
 
 ## Up to 12 Oct 2020 the newest version of working MariaDB of FreeBSD was 10.3, that's why it is used here. ##
-pkg install -y apache24 mariadb106-server mariadb106-client &> /dev/null
+pkg install -y apache24 mariadb106-server mariadb106-client &>/dev/null
 
 printf "."
 
 ## Enable and start the services ##
-sysrc apache24_enable=yes mysql_enable=yes &> /dev/null
-service apache24 start &> /dev/null
-service mysql-server start &> /dev/null
+# sysrc apache24_enable=yes mysql_enable=yes &>/dev/null
+service apache24 enable &>/dev/null
+service apache24 start &>/dev/null
+service mysql-server enable &>/dev/null
+service mysql-server start &>/dev/null
 
 #### Create if check to perform health check on MariaDB server and Apache24 ####
 #### Create if check to perform health check on MariaDB server and Apache24 ####
@@ -76,7 +83,7 @@ DB_WPDB_USER=wpdbuser_$(password_generator generate --length 6 --lower)
 DB_WPDB_USER_PASSWORD=$(password_generator generate --length 35)
 
 ## Secure the MariaDB install ##
-mysql_secure_installation <<EOF_MSQLSI &> /dev/null
+mysql_secure_installation <<EOF_MSQLSI &>/dev/null
 
 n
 y
@@ -85,34 +92,34 @@ y
 y
 EOF_MSQLSI
 
-mysql << EOF_SETROOTPASS
+mysql <<EOF_SET_ROOT_PASS
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${DB_ROOT_PASSWORD}');
 FLUSH PRIVILEGES;
-EOF_SETROOTPASS
+EOF_SET_ROOT_PASS
 
-#### Create check if password lockdown worked, if not, kill the process ####
-#### Create check if password lockdown worked, if not, kill the process ####
+#### Create check if password lock down worked, if not, kill the process ####
+#### Create check if password lock down worked, if not, kill the process ####
 
 ## Create wordpress database and assign a new user to it ##
-mysql -uroot -p${DB_ROOT_PASSWORD} << EOF_WPDATABASE
+mysql -uroot -p"${DB_ROOT_PASSWORD}" <<EOF_WP_DATABASE
 CREATE DATABASE ${DB_WPDB_NAME};
 CREATE USER '${DB_WPDB_USER}'@localhost IDENTIFIED BY '${DB_WPDB_USER_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${DB_WPDB_NAME}.* TO ${DB_WPDB_USER}@'localhost';
 FLUSH PRIVILEGES;
-EOF_WPDATABASE
+EOF_WP_DATABASE
 
 printf "."
 
-##Install all of the required PHP stuff ##
-pkg install -y mod_php80 php80-mysqli php80-tokenizer php80-zlib php80-zip php80 rsync php80-gd curl php80-curl php80-xml php80-intl php80-bcmath php80-mbstring php80-pecl-imagick php80-pecl-imagick-im7 php80-iconv php80-filter php80-pecl-json_post php80-pear-Services_JSON php80-exif php80-fileinfo php80-dom php80-session php80-ctype php80-simplexml php80-phar php80-gmp &> /dev/null
-# OLD PHP 7.4 VERSION, WILL BE REMOVED LATER
+# Install the required PHP modules
+pkg install -y mod_php80 php80-mysqli php80-tokenizer php80-zlib php80-zip php80 rsync php80-gd curl php80-curl php80-xml php80-intl php80-bcmath php80-mbstring php80-pecl-imagick php80-pecl-imagick-im7 php80-iconv php80-filter php80-pecl-json_post php80-pear-Services_JSON php80-exif php80-fileinfo php80-dom php80-session php80-ctype php80-simplexml php80-phar php80-gmp &>/dev/null
+# OLD PHP 7.4 VERSION, TO BE REMOVED LATER
 # pkg install -y mod_php74 php74-mysqli php74-tokenizer php74-zlib php74-zip php74 rsync php74-gd curl php74-curl php74-xml php74-bcmath php74-json php74-mbstring php74-pecl-imagick php74-pecl-imagick-im7 php74-iconv php74-filter php74-pecl-json_post php74-pecl-jsond php74-pear-Services_JSON php74-exif php74-fileinfo php74-openssl php74-dom php74-session php74-ctype php74-simplexml php74-phar php74-gmp &> /dev/null
 
 printf "."
 
 cp /usr/local/etc/php.ini-production /usr/local/etc/php.ini
 
-cat <<'EOF_ENABLEPHPFILES' | cat > /usr/local/etc/apache24/Includes/php.conf
+cat <<'EOF_ENABLE_PHP_FILES' | cat >/usr/local/etc/apache24/Includes/php.conf
 <IfModule dir_module>
     DirectoryIndex index.php index.html
     <FilesMatch "\.php$">
@@ -122,26 +129,26 @@ cat <<'EOF_ENABLEPHPFILES' | cat > /usr/local/etc/apache24/Includes/php.conf
         SetHandler application/x-httpd-php-source
     </FilesMatch>
 </IfModule>
-EOF_ENABLEPHPFILES
+EOF_ENABLE_PHP_FILES
 
 printf "."
 
-## Make a selfsigned SSL cert
+## Make a self-signed SSL cert
 mkdir -p /usr/local/www/apache24/ssl/
-
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/www/apache24/ssl/self.key -out /usr/local/www/apache24/ssl/self.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=Gateway-IT Department/CN=gateway-it.intranet" &> /dev/null
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /usr/local/www/apache24/ssl/self.key -out /usr/local/www/apache24/ssl/self.crt -subj "/C=GB/ST=London/L=London/O=Global Security/OU=Gateway-IT Department/CN=gateway-it.intranet" &>/dev/null
 
 chown www:www /usr/local/www/apache24/ssl/self.key
 chown www:www /usr/local/www/apache24/ssl/self.crt
 
 printf ". "
 
+# shellcheck disable=SC2059
 printf "${GREEN}Done${NC}\n"
 printf "Downloading WordPress, WP-CLI and populating default config files: "
 
 ## Download and install wp-cli ##
 cd /root/
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &> /dev/null
+curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar &>/dev/null
 chmod +x wp-cli.phar
 sudo mv wp-cli.phar /usr/local/bin/wp
 
@@ -151,7 +158,7 @@ printf "."
 cp /usr/local/etc/apache24/httpd.conf /usr/local/etc/apache24/httpd.conf.BACKUP
 rm /usr/local/etc/apache24/httpd.conf
 
-cat <<'EOF_APACHECONFIG' | cat > /usr/local/etc/apache24/httpd.conf
+cat <<'EOF_APACHE_CONFIG' | cat >/usr/local/etc/apache24/httpd.conf
 ServerRoot "/usr/local"
 Listen 443
 LoadModule mpm_prefork_module libexec/apache24/mod_mpm_prefork.so
@@ -277,71 +284,76 @@ SSLRandomSeed connect builtin
 </IfModule>
 
 Include etc/apache24/Includes/*.conf
-EOF_APACHECONFIG
+EOF_APACHE_CONFIG
 
 ## Restart apache and make sure that it's running ##
 #### CODE TO DO A HEALTH CHECK IS NOT YET PRESENT ####
-service apache24 restart &> /dev/null
+service apache24 restart &>/dev/null
 
 printf "."
 
 ## Download the latest version of WordPress, move it into the correct folder and assign right permissions ##
 cd /tmp
 
-if [[ ! -f /tmp/local.tar.gz ]] ; then
-	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
+if [[ ! -f /tmp/local.tar.gz ]]; then
+    curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
 fi
 
 if [[ -f /tmp/local.tar.gz ]] && [[ ! -f local2.tar.gz ]]; then
-	sleep 20
-	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
+    sleep 20
+    curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
 
 elif [[ ! -f /tmp/local.tar.gz ]] && [[ ! -f local2.tar.gz ]]; then
-	sleep 20
-	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
-	sleep 20
-	curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
+    sleep 20
+    curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
+    sleep 20
+    curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
 
 elif [[ ! -f /tmp/local.tar.gz ]] && [[ ! -f local2.tar.gz ]]; then
-    printf "${RED}It seems like you've got problems with the internet connection (or WordPress is limiting your connection rate/download speed). Terminating the installation. Try a bit later.${NC}\n\n"
+    # shellcheck disable=SC2059
+    printf "${RED}Looks like you've got an internet connection issues (or WordPress.org is rate-limiting you). Please, try a again later.${NC}\n\n"
     exit
 fi
 
+# shellcheck disable=SC2010
 while [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; do
-	sleep 20
-	if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
-		rm /tmp/local.tar.gz
-		curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
-	fi
-	sleep 20
-	if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then 
+    sleep 20
+    # shellcheck disable=SC2010
+    if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
+        rm /tmp/local.tar.gz
+        curl -s https://wordpress.org/latest.tar.gz -o /tmp/local.tar.gz -Y 10000 -y 10
+    fi
+    sleep 20
+    # shellcheck disable=SC2010
+    if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
         rm /tmp/local2.tar.gz
-	    curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
-	fi
-	if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
-		printf "${RED}WordPress archive file is broken{$NC}, will retry the download process, until I get it right!\n"
-	fi
+        curl -s https://wordpress.org/latest.tar.gz -o /tmp/local2.tar.gz -Y 10000 -y 10
+    fi
+    # shellcheck disable=SC2010
+    if [[ $(ls -al /tmp/ | grep "local.tar.gz" | awk '{print $5}') -ne $(ls -al /tmp/ | grep "local2.tar.gz" | awk '{print $5}') ]]; then
+        # shellcheck disable=SC2059
+        printf "${RED}WordPress archive file is broken{$NC}, will retry the download process now.\n"
+    fi
 done
-
 tar xf /tmp/local.tar.gz
 
 printf "."
 
 rm /usr/local/www/apache24/data/index.html
-
 cp -r /tmp/wordpress/* /usr/local/www/apache24/data/
 chown -R www:www /usr/local/www/apache24/data/
 
-## .htaccess file + some php.ini configuration settings inside it ##
-touch /usr/local/www/apache24/data/.htaccess &> /dev/null
+# .htaccess file + some php.ini configuration settings inside it
+touch /usr/local/www/apache24/data/.htaccess &>/dev/null
 chown www:www /usr/local/www/apache24/data/.htaccess
 
-echo "#PHP.INI VALUES" >> /usr/local/www/apache24/data/.htaccess
-echo "php_value upload_max_filesize 500M" >> /usr/local/www/apache24/data/.htaccess
-echo "php_value post_max_size 500M" >> /usr/local/www/apache24/data/.htaccess
-echo "php_value memory_limit 256M" >> /usr/local/www/apache24/data/.htaccess
-echo "php_value max_execution_time 300" >> /usr/local/www/apache24/data/.htaccess
-echo "php_value max_input_time 300" >> /usr/local/www/apache24/data/.htaccess
+# shellcheck disable=SC2129
+echo "#PHP.INI VALUES" >>/usr/local/www/apache24/data/.htaccess
+echo "php_value upload_max_filesize 500M" >>/usr/local/www/apache24/data/.htaccess
+echo "php_value post_max_size 500M" >>/usr/local/www/apache24/data/.htaccess
+echo "php_value memory_limit 256M" >>/usr/local/www/apache24/data/.htaccess
+echo "php_value max_execution_time 300" >>/usr/local/www/apache24/data/.htaccess
+echo "php_value max_input_time 300" >>/usr/local/www/apache24/data/.htaccess
 
 printf "."
 
@@ -356,7 +368,7 @@ WP_SALT6=$(password_generator generate --length 55)
 WP_SALT7=$(password_generator generate --length 55)
 WP_SALT8=$(password_generator generate --length 55)
 
-cat << 'EOF_WPCONFIG' | cat > /usr/local/www/apache24/data/wp-config.php
+cat <<'EOF_WP_CONFIG' | cat >/usr/local/www/apache24/data/wp-config.php
 <?php
 /**
  * The base configuration for WordPress
@@ -462,7 +474,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Sets up WordPress vars and included files. */
 require_once( ABSPATH . 'wp-settings.php' );
 
-EOF_WPCONFIG
+EOF_WP_CONFIG
 
 sed -i '' "/'AUTH_KEY'/s/put your unique phrase here/$WP_SALT1/" /usr/local/www/apache24/data/wp-config.php
 sed -i '' "/'SECURE_AUTH_KEY'/s/put your unique phrase here/$WP_SALT2/" /usr/local/www/apache24/data/wp-config.php
@@ -475,10 +487,11 @@ sed -i '' "/'NONCE_SALT'/s/put your unique phrase here/$WP_SALT8/" /usr/local/ww
 sed -i '' "/'DB_NAME'/s/database_name_here/$DB_WPDB_NAME/" /usr/local/www/apache24/data/wp-config.php
 sed -i '' "/'DB_USER'/s/username_here/$DB_WPDB_USER/" /usr/local/www/apache24/data/wp-config.php
 sed -i '' "/'DB_PASSWORD'/s/password_here/$DB_WPDB_USER_PASSWORD/" /usr/local/www/apache24/data/wp-config.php
-sed -i '' "/$table_prefix =/s/'wp_'/'${WP_DB_PREFIX}_'/" /usr/local/www/apache24/data/wp-config.php
+sed -i '' "/\$table_prefix =/s/'wp_'/'${WP_DB_PREFIX}_'/" /usr/local/www/apache24/data/wp-config.php
 
 printf ". "
 
+# shellcheck disable=SC2059
 printf "${GREEN}Done${NC}\n"
 printf "Initializing the WordPress installation and removing the default trash: "
 
@@ -489,49 +502,53 @@ WP_CLI_USER_EMAIL=$(password_generator generate --length 5 --lower)@nonexistentd
 
 mkdir -p /home/www/.wp-cli
 touch /home/www/.wp-cli/config.yml
-cat << 'EOF_WPCLIYML' | cat > /home/www/.wp-cli/config.yml
+cat <<'EOF_WP_CLI_YML' | cat >/home/www/.wp-cli/config.yml
 path: /usr/local/www/apache24/data/
 apache_modules:
   - mod_rewrite
-EOF_WPCLIYML
+EOF_WP_CLI_YML
 
 chown -R www /home/www
 pw usermod www -d /home/www
 #sed -i '' "/World Wide Web Owner/s/\/nonexistent/\/home\/www/" /etc/master.passwd
 
-sudo -u www wp core install --url=127.0.0.1 --title="GWIT Hosted Wordpress Site" --admin_user=$WP_CLI_USERNAME --admin_password=$WP_CLI_USER_PASSWORD --admin_email=${WP_CLI_USER_EMAIL} &> /dev/null
-sudo -u www wp rewrite structure '/%postname%/' --hard &> /dev/null
-sudo -u www wp plugin delete akismet hello &> /dev/null
-sudo -u www wp site empty --yes &> /dev/null
+sudo -u www wp core install --url=127.0.0.1 --title="GWIT Hosted Wordpress Site" --admin_user="${WP_CLI_USERNAME}" --admin_password="${WP_CLI_USER_PASSWORD}" --admin_email="${WP_CLI_USER_EMAIL}" &>/dev/null
+sudo -u www wp rewrite structure '/%postname%/' --hard &>/dev/null
+sudo -u www wp plugin delete akismet hello &>/dev/null
+sudo -u www wp site empty --yes &>/dev/null
 # sudo -u www wp theme delete twentyseventeen &> /dev/null
-sudo -u www wp theme delete twentynineteen &> /dev/null
-sudo -u www wp theme delete twentytwenty &> /dev/null
-sudo -u www wp theme delete twentytwentyone &> /dev/null
-sudo -u www wp user update "${WP_CLI_USERNAME}" --user_pass="${WP_CLI_USER_PASSWORD}" &> /dev/null
+sudo -u www wp theme delete twentynineteen &>/dev/null
+sudo -u www wp theme delete twentytwenty &>/dev/null
+sudo -u www wp theme delete twentytwentyone &>/dev/null
+sudo -u www wp user update "${WP_CLI_USERNAME}" --user_pass="${WP_CLI_USER_PASSWORD}" &>/dev/null
 
+# shellcheck disable=SC2059
 printf " ..... ${GREEN}Done${NC}\n"
 
-## Note with all credentials for later use ##
+# Note down the credentials for a later use
+# shellcheck disable=SC2059
 printf "Writing down all passwords to ${GREEN}wordpress-creds.txt${NC}: "
 
-echo "## Wordpress Web GUI username and password ##" >> /root/wordpress-creds.txt
-echo "WP_GUI_USERNAME" - $WP_CLI_USERNAME >> /root/wordpress-creds.txt
-echo "WP_GUI_USER_PASSWORD" - $WP_CLI_USER_PASSWORD >> /root/wordpress-creds.txt
-echo   >> /root/wordpress-creds.txt
-echo "## Mysql/MariaDB root password ##" >> /root/wordpress-creds.txt
-echo "DB_ROOT_PASSWORD" - $DB_ROOT_PASSWORD >> /root/wordpress-creds.txt
-echo   >> /root/wordpress-creds.txt
-echo "## Wordpress DB name, DB user, DB user's password ##" >> /root/wordpress-creds.txt
-echo "DB_WPDB_NAME" - $DB_WPDB_NAME >> /root/wordpress-creds.txt
-echo "DB_WPDB_USER" - $DB_WPDB_USER >> /root/wordpress-creds.txt
-echo "DB_WPDB_USER_PASSWORD" - $DB_WPDB_USER_PASSWORD >> /root/wordpress-creds.txt
+# shellcheck disable=SC2129
+echo "## Wordpress Web GUI username and password ##" >>/root/wordpress-creds.txt
+echo "WP_GUI_USERNAME" - "$WP_CLI_USERNAME" >>/root/wordpress-creds.txt
+echo "WP_GUI_USER_PASSWORD" - "$WP_CLI_USER_PASSWORD" >>/root/wordpress-creds.txt
+echo >>/root/wordpress-creds.txt
+echo "## Mysql/MariaDB root password ##" >>/root/wordpress-creds.txt
+echo "DB_ROOT_PASSWORD" - "$DB_ROOT_PASSWORD" >>/root/wordpress-creds.txt
+echo >>/root/wordpress-creds.txt
+echo "## Wordpress DB name, DB user, DB user's password ##" >>/root/wordpress-creds.txt
+echo "DB_WPDB_NAME" - "$DB_WPDB_NAME" >>/root/wordpress-creds.txt
+echo "DB_WPDB_USER" - "$DB_WPDB_USER" >>/root/wordpress-creds.txt
+echo "DB_WPDB_USER_PASSWORD" - "$DB_WPDB_USER_PASSWORD" >>/root/wordpress-creds.txt
 
+# shellcheck disable=SC2059
 printf " ..... ${GREEN}Done${NC} \n"
 printf "\n"
 
-## Restart apache and make sure that it's running ##
+# Restart apache and make sure that it's running
 #### CODE TO DO A HEALTH CHECK IS NOT YET PRESENT ####
-service apache24 restart &> /dev/null
+service apache24 restart &>/dev/null
 
 IPADDR=$(ifconfig | grep "192\|10\|172" | awk '{print $2}' | awk '/^192|^10|^172/')
 
@@ -540,15 +557,18 @@ IPADDR=$(ifconfig | grep "192\|10\|172" | awk '{print $2}' | awk '/^192|^10|^172
 #printf "The installation is now finished. Go to ${CYAN}https://${IPADDR}${NC} or \
 #${CYAN}https://$(hostname)${NC} or ${CYAN}https://$(curl -s ifconfig.me)${NC} to configure your new site. \n"
 
-printf "The installation is now finished. In case you forgot, this VM IP is: ${CYAN}${IPADDR}${NC}\n"
-printf "Go to ${CYAN}https://${IPADDR}/wp-admin/${NC} if you'd like to configure or test your new WordPress website.\n"
+printf "The installation is now finished."
+printf "You can visit the link below to configure or test your new WordPress website.\n"
+# shellcheck disable=SC2059
+printf "${CYAN}https://${IPADDR}/wp-admin/${NC}\n"
 
 printf "\n"
 
-## Printout username and password: ##
-printf "Your admin username: "
-printf "${CYAN}$WP_CLI_USERNAME${NC} "
-printf "and password: "
-printf "${CYAN}$WP_CLI_USER_PASSWORD${NC}\n"
+# Print out the username and password:
+printf "To log-in as admin, use the following credentials: "
+# shellcheck disable=SC2059
+printf "username -> ${CYAN}$WP_CLI_USERNAME${NC}\n"
+# shellcheck disable=SC2059
+printf "password -> ${CYAN}$WP_CLI_USER_PASSWORD${NC}\n"
 
 printf "\n"
