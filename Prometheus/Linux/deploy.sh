@@ -34,6 +34,7 @@ LATEST_VERSION=$(wget -qO- https://api.github.com/repos/prometheus/prometheus/re
 LATEST_VERSION=${LATEST_VERSION:1} # Remove the 'v' from the version number
 
 # Download Prometheus
+# shellcheck disable=SC2086
 wget https://github.com/prometheus/prometheus/releases/download/v${LATEST_VERSION}/prometheus-${LATEST_VERSION}.linux-${ARCH}.tar.gz
 tar -xvzf prometheus*.tar.gz
 mv prometheus*${ARCH} prometheus # Move the extracted directory to a generic name
@@ -42,8 +43,10 @@ mv prometheus*${ARCH} prometheus # Move the extracted directory to a generic nam
 useradd --no-create-home --shell /bin/false prometheus
 mkdir /etc/prometheus
 mkdir /var/lib/prometheus
-chown prometheus:prometheus /etc/prometheus
-chown prometheus:prometheus /var/lib/prometheus
+mkdir /var/log/prometheus
+chown -R prometheus:prometheus /etc/prometheus
+chown -R prometheus:prometheus /var/lib/prometheus
+chown -R prometheus:prometheus /var/log/prometheus
 
 # Copy Prometheus files to /usr/local/bin and assign permissions
 cp prometheus/prometheus /usr/local/bin/
@@ -63,9 +66,9 @@ global:
   scrape_interval: 60s
 
 scrape_configs:
- - job_name: 'prometheus'
-     static_configs:
-     - targets: ['localhost:9090']
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
 EOF
 chown prometheus:prometheus /etc/prometheus/prometheus.yml
 
@@ -82,10 +85,18 @@ Group=prometheus
 Type=simple
 
 ExecStart=/usr/local/bin/prometheus \
-    --config.file /etc/prometheus/prometheus.yml \
-    --storage.tsdb.path /var/lib/prometheus \
+    --config.file=/etc/prometheus/prometheus.yml \
+    --storage.tsdb.path=/var/lib/prometheus \
     --web.console.templates=/etc/prometheus/consoles \
-    --web.console.libraries=/etc/prometheus/console_libraries
+    --web.console.libraries=/etc/prometheus/console_libraries \
+    --log.level=info \
+    --log.to.file=true \
+    --log.filename=/var/log/prometheus/prometheus.log \
+    --log.rotation.max-size=100M \
+    --log.rotation.max-backups=3 \
+    --log.format=json \
+    --storage.tsdb.retention.time=365d \
+    --web.enable-remote-write-receiver
 
 ExecReload=/usr/bin/kill -HUP $MAINPID
 
@@ -99,7 +110,7 @@ systemctl start prometheus
 systemctl enable prometheus
 
 # Clean up downloaded files
-rm -rfv prometheus*.tar.gz
+rm -fv prometheus*.tar.gz
 rm -rfv prometheus
 
 # Check the status of the Prometheus service before exiting

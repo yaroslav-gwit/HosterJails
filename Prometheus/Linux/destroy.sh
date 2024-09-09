@@ -19,6 +19,7 @@ systemctl stop prometheus
 # Remove Prometheus service directories
 rm -rfv /var/lib/prometheus # This will remove all time series data stored by Prometheus
 rm -rfv /etc/prometheus     # This will remove all configuration files
+rm -rfv /var/log/prometheus # This will remove all log files
 
 # Remove Prometheus systemd service and it's binary files
 rm -fv /etc/systemd/system/prometheus.service
@@ -27,7 +28,7 @@ rm -fv /usr/local/bin/promtool
 
 # Remove Prometheus user and group
 userdel prometheus
-groupdel prometheus
+groupdel prometheus || true
 
 # Reload systemd manager configuration
 systemctl daemon-reload
