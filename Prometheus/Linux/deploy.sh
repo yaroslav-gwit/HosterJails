@@ -63,9 +63,9 @@ global:
   scrape_interval: 60s
 
 scrape_configs:
-    - job_name: 'prometheus'
-        static_configs:
-        - targets: ['localhost:9090']
+ - job_name: 'prometheus'
+     static_configs:
+     - targets: ['localhost:9090']
 EOF
 chown prometheus:prometheus /etc/prometheus/prometheus.yml
 
@@ -97,8 +97,10 @@ EOF
 systemctl daemon-reload
 systemctl start prometheus
 systemctl enable prometheus
-systemctl status prometheus # Check the status of the Prometheus service before exiting
 
 # Clean up downloaded files
 rm -rfv prometheus*.tar.gz
 rm -rfv prometheus
+
+# Check the status of the Prometheus service before exiting
+systemctl status prometheus
