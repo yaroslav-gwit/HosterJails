@@ -1,6 +1,6 @@
 # Prometheus Installation Script
 
-These set of shell scripts will automatically install, update or remove Prometheus on your Linux distro of choice.
+A set of shell scripts which will automatically install, update or remove Prometheus on your Linux distro of choice.
 
 ## Requirements
 
