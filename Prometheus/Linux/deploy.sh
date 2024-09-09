@@ -36,7 +36,7 @@ LATEST_VERSION=${LATEST_VERSION:1} # Remove the 'v' from the version number
 # Download Prometheus
 wget https://github.com/prometheus/prometheus/releases/download/v${LATEST_VERSION}/prometheus-${LATEST_VERSION}.linux-${ARCH}.tar.gz
 tar -xvzf prometheus*.tar.gz
-mv prometheus* prometheus
+mv prometheus*${ARCH} prometheus # Move the extracted directory to a generic name
 
 # Create Prometheus user and required service directories
 useradd --no-create-home --shell /bin/false prometheus
