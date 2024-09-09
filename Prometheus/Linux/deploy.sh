@@ -79,6 +79,12 @@ Description=Prometheus monitoring system and time series database
 Wants=network-online.target
 After=network-online.target
 
+[ExecStartPre]
+ExecStartPre=/usr/bin/mkdir -p /var/log/prometheus
+ExecStartPre=/usr/bin/touch /var/log/prometheus/prometheus.log
+ExecStartPre=/usr/bin/chown -R prometheus:prometheus /var/log/prometheus
+TimeoutSec=10s
+
 [Service]
 User=prometheus
 Group=prometheus
@@ -90,13 +96,10 @@ ExecStart=/usr/local/bin/prometheus \
     --web.console.templates=/etc/prometheus/consoles \
     --web.console.libraries=/etc/prometheus/console_libraries \
     --log.level=info \
-    --log.to.file=true \
-    --log.filename=/var/log/prometheus/prometheus.log \
-    --log.rotation.max-size=100M \
-    --log.rotation.max-backups=3 \
     --log.format=json \
     --storage.tsdb.retention.time=365d \
-    --web.enable-remote-write-receiver
+    --web.enable-remote-write-receiver \
+    2>&1 | /usr/bin/tee -a /var/log/prometheus/prometheus.log
 
 ExecReload=/usr/bin/kill -HUP $MAINPID
 
