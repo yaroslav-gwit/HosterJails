@@ -56,15 +56,16 @@ To reload Prometheus after the config change, simply execute:
 systemctl reload prometheus
 ```
 
-### Log Location
+### Logging
 
-Main log file location:
+Prometheus log is being maintained and managed by `journalctl`.
+To view the log execute the command below (use arrows or `j`/`k` to navigate up or down the log file):
 
+```shell
+journalctl -u prometheus.service
 ```
-/var/log/prometheus/prometheus.log
-```
 
-Log file is being rotated every 100MB, whilst keeping 3 (old) backups in total.
+Log rotation is also managed by the `journalctl`.
 
 ### TSDB Retention
 
