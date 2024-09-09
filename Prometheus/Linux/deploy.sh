@@ -79,16 +79,14 @@ Description=Prometheus monitoring system and time series database
 Wants=network-online.target
 After=network-online.target
 
-[ExecStartPre]
-ExecStartPre=/usr/bin/mkdir -p /var/log/prometheus
-ExecStartPre=/usr/bin/touch /var/log/prometheus/prometheus.log
-ExecStartPre=/usr/bin/chown -R prometheus:prometheus /var/log/prometheus
-TimeoutSec=10s
-
 [Service]
 User=prometheus
 Group=prometheus
 Type=simple
+
+ExecStartPre=/usr/bin/mkdir -p /var/log/prometheus
+ExecStartPre=/usr/bin/touch /var/log/prometheus/prometheus.log
+ExecStartPre=/usr/bin/chown -R prometheus:prometheus /var/log/prometheus
 
 ExecStart=/usr/local/bin/prometheus \
     --config.file=/etc/prometheus/prometheus.yml \
@@ -98,13 +96,15 @@ ExecStart=/usr/local/bin/prometheus \
     --log.level=info \
     --log.format=json \
     --storage.tsdb.retention.time=365d \
-    --web.enable-remote-write-receiver \
-    2>&1 | /usr/bin/tee -a /var/log/prometheus/prometheus.log
+    --web.enable-remote-write-receiver
 
 ExecReload=/usr/bin/kill -HUP $MAINPID
+StandardOutput=append:/var/log/prometheus/prometheus.log
+StandardError=append:/var/log/prometheus/prometheus.log
 
 [Install]
 WantedBy=multi-user.target
+
 EOF
 
 # Start Prometheus service
