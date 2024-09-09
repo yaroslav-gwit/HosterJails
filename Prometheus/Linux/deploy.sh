@@ -84,9 +84,9 @@ User=prometheus
 Group=prometheus
 Type=simple
 
-ExecStartPre=/usr/bin/mkdir -p /var/log/prometheus
-ExecStartPre=/usr/bin/touch /var/log/prometheus/prometheus.log
-ExecStartPre=/usr/bin/chown -R prometheus:prometheus /var/log/prometheus
+# ExecStartPre=/usr/bin/mkdir -p /var/log/prometheus
+# ExecStartPre=/usr/bin/touch /var/log/prometheus/prometheus.log
+# ExecStartPre=/usr/bin/chown -R prometheus:prometheus /var/log/prometheus
 
 ExecStart=/usr/local/bin/prometheus \
     --config.file=/etc/prometheus/prometheus.yml \
@@ -99,8 +99,12 @@ ExecStart=/usr/local/bin/prometheus \
     --web.enable-remote-write-receiver
 
 ExecReload=/usr/bin/kill -HUP $MAINPID
-StandardOutput=append:/var/log/prometheus/prometheus.log
-StandardError=append:/var/log/prometheus/prometheus.log
+
+# StandardOutput=append:/var/log/prometheus/prometheus.log
+# StandardError=append:/var/log/prometheus/prometheus.log
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=prometheus
 
 [Install]
 WantedBy=multi-user.target
