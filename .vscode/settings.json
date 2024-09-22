@@ -1,3 +1,18 @@
 {
-  "cSpell.words": ["distro", "journalctl", "MAINPID", "tsdb", "userdel", "xvzf"]
+  "cSpell.words": [
+    "distro",
+    "driftfile",
+    "iburst",
+    "journalctl",
+    "keyfile",
+    "logdir",
+    "MAINPID",
+    "maxsources",
+    "maxupdateskew",
+    "rtcfile",
+    "rtcsync",
+    "tsdb",
+    "userdel",
+    "xvzf"
+  ]
 }
