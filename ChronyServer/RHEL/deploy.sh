@@ -69,6 +69,10 @@ systemctl enable chronyd && systemctl start chronyd
 sleep 5
 systemctl restart chronyd
 
+# Open the necessary ports in the firewall
+firewall-cmd --add-service=ntp --permanent --zone=public
+firewall-cmd --reload
+
 # Check the status of the Chrony service
 echo
 echo

@@ -4,6 +4,8 @@ A set of shell scripts which will automatically install, update or remove Promet
 
 ## Requirements
 
+### Install Packages
+
 Please, make sure these apps are available on your system before executing any of the scripts below:
 
 ```
@@ -13,7 +15,21 @@ curl
 bash
 ```
 
-Execute all scripts from under the `root` user.
+For example, on Debian-based systems install them this way:
+
+```shell
+sudo apt install -y jq wget curl bash
+```
+
+On RHEL-based systems:
+
+```shell
+sudo dnf install -y jq wget curl bash
+```
+
+### Use `root` user account
+
+Another requirement is to execute all scripts from under the `root` user, aka `sudo su -`.
 
 ## Deploy.sh
 
